@@ -65,7 +65,7 @@ export default function Products() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={`${t('search')}...`}
-          className="w-full pl-11 pr-4"
+          className="w-full !pl-12 pr-4"
           id="product-search"
         />
       </div>

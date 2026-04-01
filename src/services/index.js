@@ -102,9 +102,9 @@ export async function updateOrderStatus(id, status) {
 }
 
 // Blood Tests
-export function getBloodTestTypes() {
-  // This is sync since it's static data
-  return mockService.getBloodTestTypes();
+export async function getBloodTestTypes() {
+  const svc = await getService();
+  return svc.getBloodTestTypes();
 }
 
 export async function bookBloodTest(data) {

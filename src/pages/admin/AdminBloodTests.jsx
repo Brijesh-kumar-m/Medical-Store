@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getBloodTestBookings, updateBloodTestStatus, uploadFile } from '../../services/index.js';
 import { LoadingSpinner } from '../../components/ui/Loading';
@@ -11,7 +11,7 @@ export default function AdminBloodTests() {
   const { t, lang } = useLanguage();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const fileRef = useRef();
+
   const [uploadingId, setUploadingId] = useState(null);
 
   useEffect(() => { load(); }, []);
@@ -90,7 +90,7 @@ export default function AdminBloodTests() {
                   <select
                     value={bt.status}
                     onChange={(e) => handleStatusChange(bt.id, e.target.value)}
-                    className={`appearance-none px-3 py-1.5 pr-8 rounded-xl text-xs font-semibold border cursor-pointer ${statusColors[bt.status] || statusColors.requested}`}
+                    className={`appearance-none px-3 py-1.5 pr-8 rounded-xl text-xs font-semibold border cursor-pointer bg-transparent ${statusColors[bt.status] || statusColors.requested}`}
                   >
                     {statuses.map((s) => (
                       <option key={s} value={s}>{t(`status_${s}`)}</option>

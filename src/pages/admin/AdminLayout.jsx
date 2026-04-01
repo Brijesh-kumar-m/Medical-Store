@@ -15,7 +15,7 @@ export default function AdminLayout() {
     if (!isAdmin) {
       navigate('/login');
     }
-  }, [isAdmin]);
+  }, [isAdmin, navigate]);
 
   if (!isAdmin) return null;
 

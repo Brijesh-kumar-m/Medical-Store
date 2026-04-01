@@ -31,8 +31,27 @@ export default function Orders() {
       navigate('/login');
       return;
     }
-    loadData();
-  }, [user]);
+    let cancelled = false;
+    async function fetchData() {
+      setLoading(true);
+      try {
+        const [o, bt] = await Promise.all([
+          getOrders(user.id),
+          getBloodTestBookings(user.id),
+        ]);
+        if (!cancelled) {
+          setOrders(o);
+          setBloodTests(bt);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    fetchData();
+    return () => { cancelled = true; };
+  }, [user, navigate]);
 
   async function loadData() {
     setLoading(true);

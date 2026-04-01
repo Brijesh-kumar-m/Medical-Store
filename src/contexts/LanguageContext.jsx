@@ -33,7 +33,17 @@ export function LanguageProvider({ children }) {
 
   return (
     <LanguageContext.Provider value={{ lang, switchLanguage, t, loading }}>
-      {children}
+      {loading ? (
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030812' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #04c8a5, #0d9488)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 0 20px rgba(4,200,165,0.3)' }}>
+              <span style={{ color: '#fff', fontWeight: 900, fontSize: 18 }}>O₂</span>
+            </div>
+            <div style={{ width: 24, height: 24, border: '3px solid rgba(4,200,165,0.3)', borderTopColor: '#04c8a5', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto' }} />
+            <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+          </div>
+        </div>
+      ) : children}
     </LanguageContext.Provider>
   );
 }

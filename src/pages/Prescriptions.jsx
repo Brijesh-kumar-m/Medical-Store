@@ -21,11 +21,13 @@ export default function Prescriptions() {
   function handleFile(e) {
     const f = e.target.files[0];
     if (!f) return;
+    if (preview) URL.revokeObjectURL(preview);
     setFile(f);
     setPreview(URL.createObjectURL(f));
   }
 
   function clearFile() {
+    if (preview) URL.revokeObjectURL(preview);
     setFile(null);
     setPreview(null);
   }

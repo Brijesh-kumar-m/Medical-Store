@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,6 +6,7 @@ import { getBloodTestTypes, bookBloodTest } from '../services/index.js';
 import { openWhatsApp, generateBloodTestMessage } from '../utils/whatsapp';
 import { showToast } from '../components/ui/Toast';
 import { Droplets, Calendar, Clock, MapPin, User, CheckCircle, MessageCircle, ArrowLeft } from 'lucide-react';
+import { LoadingSpinner } from '../components/ui/Loading';
 
 const timeSlots = [
   '7:00 AM - 8:00 AM',
@@ -21,8 +22,8 @@ export default function BloodTests() {
   const { t, lang } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const tests = getBloodTestTypes();
 
+  const [tests, setTests] = useState([]);
   const [step, setStep] = useState(1); // 1=select, 2=details, 3=done
   const [selectedTest, setSelectedTest] = useState(null);
   const [patientName, setPatientName] = useState(user?.name || '');
@@ -31,6 +32,21 @@ export default function BloodTests() {
   const [address, setAddress] = useState('');
   const [booking, setBooking] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [loadingTests, setLoadingTests] = useState(true);
+
+  useEffect(() => {
+    async function loadTests() {
+      try {
+        const data = await getBloodTestTypes();
+        setTests(data);
+      } catch (err) {
+        console.error('Failed to load blood test types:', err);
+      } finally {
+        setLoadingTests(false);
+      }
+    }
+    loadTests();
+  }, []);
 
   async function handleBook() {
     if (!user || user.id === 'guest') {
@@ -125,7 +141,7 @@ export default function BloodTests() {
       {step === 1 && (
         <div className="space-y-3 animate-fade-in">
           <h3 className="font-bold text-lg mb-3">{t('select_test')}</h3>
-          {tests.map((test) => {
+          {loadingTests ? <LoadingSpinner text={t('loading')} /> : tests.map((test) => {
             const name = lang === 'hi' && test.name_hi ? test.name_hi : test.name;
             const isSelected = selectedTest?.id === test.id;
             return (

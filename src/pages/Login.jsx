@@ -44,7 +44,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center px-4 pt-8 pb-32">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8 animate-fade-in">
@@ -91,7 +91,7 @@ export default function Login() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={t('enter_name')}
-                  className="w-full pl-11"
+                  className="w-full !pl-12"
                   id="login-name"
                 />
               </div>
@@ -106,7 +106,7 @@ export default function Login() {
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
                   placeholder={t('enter_mobile')}
-                  className="w-full pl-11"
+                  className="w-full !pl-12"
                   id="login-mobile"
                   inputMode="numeric"
                 />

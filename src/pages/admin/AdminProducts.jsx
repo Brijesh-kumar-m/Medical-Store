@@ -133,27 +133,38 @@ export default function AdminProducts() {
                 <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="w-full" />
               </div>
               <div>
-                <label className="input-label">{t('product_category')}</label>
-                <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full">
-                  {categories.map((c) => <option key={c} value={c}>{t(c)}</option>)}
-                </select>
+                <label className="input-label mb-3">{t('product_category')}</label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {categories.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setForm({ ...form, category: c })}
+                      className={`py-2.5 px-3 rounded-xl text-xs font-semibold transition-all duration-300 border ${
+                        form.category === c
+                          ? 'bg-brand-500 text-white border-brand-500 shadow-lg shadow-brand-500/30'
+                          : 'bg-surface-800/80 text-surface-400 border-surface-600 hover:border-brand-500/50 hover:text-white'
+                      }`}
+                    >
+                      {t(c)}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
+              <div className="flex items-center gap-6">
+                <label className="flex items-center gap-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={form.requires_prescription}
                     onChange={(e) => setForm({ ...form, requires_prescription: e.target.checked })}
-                    className="w-4 h-4 rounded border-surface-600 bg-surface-700"
                   />
                   <span className="text-sm">{t('requires_prescription')}</span>
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={form.in_stock}
                     onChange={(e) => setForm({ ...form, in_stock: e.target.checked })}
-                    className="w-4 h-4 rounded border-surface-600 bg-surface-700"
                   />
                   <span className="text-sm">{t('in_stock')}</span>
                 </label>

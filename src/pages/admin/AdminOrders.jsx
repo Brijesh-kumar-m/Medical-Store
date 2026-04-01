@@ -83,7 +83,7 @@ export default function AdminOrders() {
                   <select
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                    className={`appearance-none px-3 py-1.5 pr-8 rounded-xl text-xs font-semibold border cursor-pointer ${statusColors[order.status] || statusColors.pending}`}
+                    className={`appearance-none px-3 py-1.5 pr-8 rounded-xl text-xs font-semibold border cursor-pointer bg-transparent ${statusColors[order.status] || statusColors.pending}`}
                   >
                     {statuses.map((s) => (
                       <option key={s} value={s}>{t(`status_${s}`)}</option>
