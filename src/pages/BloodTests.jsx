@@ -65,7 +65,6 @@ export default function BloodTests() {
       const result = await bookBloodTest({
         user_id: user.id,
         test_type: selectedTest.name,
-        test_id: selectedTest.id,
         patient_name: patientName,
         date,
         time,
@@ -100,7 +99,7 @@ export default function BloodTests() {
         <div className="flex gap-3">
           <button
             onClick={() => {
-              const msg = generateBloodTestMessage({ test_type: selectedTest.name, patient_name: patientName, date, time, address }, lang);
+              const msg = generateBloodTestMessage({ test_type: selectedTest.name, patient_name: patientName, date, time, address, mobile: user?.mobile }, lang);
               openWhatsApp(msg);
             }}
             className="btn-whatsapp"

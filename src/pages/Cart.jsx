@@ -64,12 +64,18 @@ export default function Cart() {
   }
 
   function handleWhatsApp() {
+    if (!address.trim()) {
+      showToast(lang === 'hi' ? 'कृपया डिलीवरी के लिए पता दर्ज करें' : 'Please enter delivery address', 'error');
+      document.getElementById('cart-address')?.focus();
+      return;
+    }
     const order = { 
       subtotal: totalPrice, 
       delivery_charge: deliveryCharge, 
       total_price: finalTotal, 
       address, 
-      mobile: user?.mobile || '' 
+      mobile: user?.mobile || '',
+      patient_name: user?.name || ''
     };
     const msg = generateOrderMessage(order, items, lang);
     openWhatsApp(msg);

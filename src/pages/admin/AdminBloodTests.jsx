@@ -6,10 +6,10 @@ import {
 } from '../../services/index.js';
 import { LoadingSpinner } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
-import { Droplets, ChevronDown, Upload, FileText, Plus, Edit3, Trash2, X, Save } from 'lucide-react';
+import { Droplets, ChevronDown, Upload, FileText, Plus, Edit3, Trash2, X, Save, Calendar, MapPin, IndianRupee, User, Phone } from 'lucide-react';
 
 const statuses = ['requested', 'collected', 'report_ready'];
-const emptyTest = { name: '', name_hi: '', price: '', mrp: '', offer: '' };
+const emptyTest = { name: '', name_hi: '', price: '', mrp: '', offer: '', sort_order: 0 };
 
 export default function AdminBloodTests() {
   const { t, lang } = useLanguage();
@@ -138,11 +138,27 @@ export default function AdminBloodTests() {
                   <h4 className="font-semibold text-sm">{bt.test_type}</h4>
                   <span className="text-xs text-surface-500 font-mono">{bt.id}</span>
                 </div>
-                <div className="text-xs text-surface-400 space-y-1 mb-3">
-                  <p>👤 {bt.patient_name}</p>
-                  <p>📅 {bt.date} | ⏰ {bt.time}</p>
-                  <p>📍 {bt.address}</p>
-                  <p>💰 ₹{bt.price}</p>
+                <div className="text-xs text-surface-400 space-y-1.5 mb-3">
+                  <p className="flex items-center gap-1.5 font-medium text-surface-200">
+                    <User size={14} className="text-brand-400 shrink-0" /> {bt.patient_name}
+                  </p>
+                  <p className="flex items-center gap-1.5 text-surface-400">
+                    <Calendar size={14} className="shrink-0" /> {bt.date} <span className="text-surface-600">|</span> ⏰ {bt.time}
+                  </p>
+                  <p className="flex items-start gap-1.5 text-surface-400">
+                    <MapPin size={14} className="shrink-0 mt-0.5" /> <span>{bt.address}</span>
+                  </p>
+                  <p className="flex items-center gap-1.5 font-semibold text-brand-400 mt-1">
+                    <IndianRupee size={14} className="shrink-0" /> {bt.price}
+                  </p>
+                  {bt.users?.mobile && (
+                    <p className="flex items-center gap-1.5 mt-2 pt-2 border-t border-surface-700/50">
+                      <Phone size={14} className="text-green-500 shrink-0" />
+                      <a href={`https://wa.me/91${bt.users.mobile}`} target="_blank" rel="noreferrer" className="text-green-500 hover:text-green-400 hover:underline font-bold">
+                        WhatsApp Contact (+91 {bt.users.mobile})
+                      </a>
+                    </p>
+                  )}
                 </div>
                 <div className="flex items-center justify-between pt-3 border-t border-surface-700 gap-2">
                   <div className="relative">
@@ -151,7 +167,7 @@ export default function AdminBloodTests() {
                       onChange={(e) => handleStatusChange(bt.id, e.target.value)}
                       className={`appearance-none px-3 py-1.5 pr-8 rounded-xl text-xs font-semibold border cursor-pointer bg-transparent ${statusColors[bt.status] || statusColors.requested}`}
                     >
-                      {statuses.map((s) => <option key={s} value={s}>{t(`status_${s}`)}</option>)}
+                      {statuses.map((s) => <option key={s} value={s} className="bg-surface-800 text-white font-semibold">{t(`status_${s}`)}</option>)}
                     </select>
                     <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
@@ -236,9 +252,15 @@ export default function AdminBloodTests() {
                       <input type="number" value={testForm.mrp || ''} onChange={(e) => setTestForm({...testForm, mrp: e.target.value})} className="w-full" placeholder="Optional" />
                     </div>
                   </div>
-                  <div>
-                    <label className="input-label">Offer Text (e.g. "Free Home Collection")</label>
-                    <input value={testForm.offer || ''} onChange={(e) => setTestForm({...testForm, offer: e.target.value})} className="w-full" placeholder="Optional" />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="input-label">Offer Text</label>
+                      <input value={testForm.offer || ''} onChange={(e) => setTestForm({...testForm, offer: e.target.value})} className="w-full" placeholder="Optional" />
+                    </div>
+                    <div>
+                      <label className="input-label" title="Higher number = Top rank">⭐ Top Priority (Number)</label>
+                      <input type="number" value={testForm.sort_order === 0 ? '' : testForm.sort_order} onChange={(e) => setTestForm({...testForm, sort_order: e.target.value === '' ? 0 : parseInt(e.target.value) || 0})} className="w-full" placeholder="0" />
+                    </div>
                   </div>
                   <button onClick={handleSaveTest} className="btn-primary w-full flex items-center justify-center gap-2">
                     <Save size={18} /> {t('save')}

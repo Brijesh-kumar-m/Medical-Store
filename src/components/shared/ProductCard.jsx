@@ -10,12 +10,12 @@ export default function ProductCard({ product }) {
   const name = lang === 'hi' && product.name_hi ? product.name_hi : product.name;
 
   function handleAdd() {
-    if (product.requires_prescription) {
-      showToast(t('prescription_required'), 'info');
-      return;
-    }
     addItem(product);
-    showToast(`${name} ${lang === 'hi' ? 'कार्ट में जोड़ा गया' : 'added to cart'}`, 'success');
+    if (product.requires_prescription) {
+      showToast(lang === 'hi' ? 'पर्चा (Prescription) अपलोड करना अनिवार्य है!' : 'Prescription upload is required for this item!', 'warning');
+    } else {
+      showToast(`${name} ${lang === 'hi' ? 'कार्ट में जोड़ा गया' : 'added to cart'}`, 'success');
+    }
   }
 
   return (

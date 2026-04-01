@@ -9,7 +9,7 @@ const categories = ['fever_cold', 'pain_relief', 'vitamins', 'diabetes', 'first_
 
 const emptyProduct = {
   name: '', name_hi: '', price: '', mrp: '', category: 'general',
-  image: '', offer: '', requires_prescription: false, in_stock: true,
+  image: '', offer: '', requires_prescription: false, in_stock: true, sort_order: 0
 };
 
 export default function AdminProducts() {
@@ -138,9 +138,15 @@ export default function AdminProducts() {
                   <input type="number" value={form.mrp || ''} onChange={(e) => setForm({ ...form, mrp: e.target.value })} className="w-full" placeholder="e.g. 50" />
                 </div>
               </div>
-              <div>
-                <label className="input-label">Offer Text (Optional)</label>
-                <input value={form.offer || ''} onChange={(e) => setForm({ ...form, offer: e.target.value })} placeholder="e.g., Free Delivery, BOGO" className="w-full" />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="input-label">Offer Text (Optional)</label>
+                  <input value={form.offer || ''} onChange={(e) => setForm({ ...form, offer: e.target.value })} placeholder="e.g., Free Delivery, BOGO" className="w-full" />
+                </div>
+                <div>
+                  <label className="input-label" title="Higher number = Top rank">⭐ Top Priority (Number)</label>
+                  <input type="number" value={form.sort_order === 0 ? '' : form.sort_order} onChange={(e) => setForm({ ...form, sort_order: e.target.value === '' ? 0 : parseInt(e.target.value) || 0 })} placeholder="0" className="w-full" />
+                </div>
               </div>
               <div>
                 <label className="input-label">Product Image (Optional)</label>

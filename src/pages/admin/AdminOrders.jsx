@@ -3,7 +3,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { getOrders, updateOrderStatus } from '../../services/index.js';
 import { LoadingSpinner } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
-import { Package, ChevronDown } from 'lucide-react';
+import { Package, ChevronDown, Phone, MapPin, User } from 'lucide-react';
 
 const statuses = ['pending', 'confirmed', 'dispatched', 'delivered'];
 
@@ -71,8 +71,23 @@ export default function AdminOrders() {
                 ))}
               </div>
 
-              <div className="text-xs text-surface-400 mb-3">
-                📍 {order.address || '—'}
+              <div className="flex flex-col gap-2 mb-3 pt-3 border-t border-surface-700">
+                <div className="flex items-center gap-2 text-xs text-surface-300">
+                  <User size={14} className="shrink-0 text-brand-400" />
+                  <span className="font-semibold">{order.users?.name || 'Customer'}</span>
+                </div>
+                <div className="flex items-start gap-2 text-xs text-surface-400 leading-tight">
+                  <MapPin size={14} className="shrink-0 mt-0.5" />
+                  <span>{order.address || '—'}</span>
+                </div>
+                {(order.mobile || order.users?.mobile) && (
+                  <div className="flex items-center gap-2 text-xs">
+                    <Phone size={14} className="shrink-0 text-green-500" />
+                    <a href={`https://wa.me/91${order.mobile || order.users?.mobile}`} target="_blank" rel="noreferrer" className="text-green-500 hover:text-green-400 hover:underline font-bold">
+                      WhatsApp Contact (+91 {order.mobile || order.users?.mobile})
+                    </a>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-between pt-3 border-t border-surface-700">
@@ -86,7 +101,9 @@ export default function AdminOrders() {
                     className={`appearance-none px-3 py-1.5 pr-8 rounded-xl text-xs font-semibold border cursor-pointer bg-transparent ${statusColors[order.status] || statusColors.pending}`}
                   >
                     {statuses.map((s) => (
-                      <option key={s} value={s}>{t(`status_${s}`)}</option>
+                      <option key={s} value={s} className="bg-surface-800 text-white font-semibold">
+                        {t(`status_${s}`)}
+                      </option>
                     ))}
                   </select>
                   <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />

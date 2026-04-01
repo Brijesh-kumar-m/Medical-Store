@@ -47,7 +47,7 @@ const supabaseService = {
     if (category && category !== 'all') {
       q = q.eq('category', category);
     }
-    const { data } = await q.order('name');
+    const { data } = await q.order('sort_order', { ascending: false }).order('created_at', { ascending: false });
     return data || [];
   },
 
@@ -83,7 +83,7 @@ const supabaseService = {
   },
 
   async getOrders(userId) {
-    let q = supabase.from('orders').select('*');
+    let q = supabase.from('orders').select('*, users(name, mobile)');
     if (userId) q = q.eq('user_id', userId);
     const { data } = await q.order('created_at', { ascending: false });
     return data || [];
@@ -114,7 +114,7 @@ const supabaseService = {
   },
 
   async getBloodTestTypes() {
-    const { data } = await supabase.from('blood_test_types').select('*').order('created_at', { ascending: true });
+    const { data } = await supabase.from('blood_test_types').select('*').order('sort_order', { ascending: false }).order('created_at', { ascending: true });
     return data || [];
   },
 
@@ -146,7 +146,7 @@ const supabaseService = {
   },
 
   async getBloodTestBookings(userId) {
-    let q = supabase.from('blood_tests').select('*');
+    let q = supabase.from('blood_tests').select('*, users(name, mobile)');
     if (userId) q = q.eq('user_id', userId);
     const { data } = await q.order('created_at', { ascending: false });
     return data || [];

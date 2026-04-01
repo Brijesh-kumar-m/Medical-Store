@@ -48,8 +48,7 @@ export default function Prescriptions() {
       const imageUrl = await uploadFile(file, 'prescriptions');
       await uploadPrescription({
         user_id: user.id,
-        image_url: imageUrl,
-        linked_order_id: null,
+        file_url: imageUrl
       });
       setDone(true);
       showToast(lang === 'hi' ? 'प्रिस्क्रिप्शन अपलोड हो गया!' : 'Prescription uploaded!');
@@ -93,9 +92,9 @@ export default function Prescriptions() {
             <img src={preview} alt="Prescription" className="w-full max-h-80 object-contain bg-surface-800 rounded-2xl" />
             <button
               onClick={clearFile}
-              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg"
+              className="absolute top-3 right-3 w-9 h-9 rounded-full bg-red-500/80 backdrop-blur-md border border-white/20 text-white flex items-center justify-center shadow-2xl transition-all hover:bg-red-600 hover:scale-110 active:scale-95 z-10"
             >
-              <X size={16} />
+              <X size={18} strokeWidth={2.5} />
             </button>
           </div>
         ) : (

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Phone, ArrowRight, UserCheck, Eye } from 'lucide-react';
+import { User, Phone, ArrowRight, UserCheck, Eye, Lock } from 'lucide-react';
 import { showToast } from '../components/ui/Toast';
 
 export default function Login() {
@@ -13,7 +13,11 @@ export default function Login() {
   const [mode, setMode] = useState('simple'); // 'simple' | 'otp'
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
+  const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const adminMobiles = (import.meta.env.VITE_ADMIN_MOBILES || '').split(',');
+  const isAdminPhone = mobile.length === 10 && adminMobiles.includes(mobile);
 
   async function handleSimpleLogin(e) {
     e.preventDefault();
@@ -24,6 +28,14 @@ export default function Login() {
     if (!/^\d{10}$/.test(mobile)) {
       showToast(lang === 'hi' ? 'कृपया 10 अंकों का मोबाइल नंबर दर्ज करें' : 'Please enter a valid 10-digit mobile number', 'error');
       return;
+    }
+
+    if (isAdminPhone) {
+      const correctPin = import.meta.env.VITE_ADMIN_PIN || '123456';
+      if (pin !== correctPin) {
+        showToast(lang === 'hi' ? 'गलत एडमिन पिन (Incorrect PIN)' : 'Incorrect Admin Security PIN', 'error');
+        return;
+      }
     }
 
     setLoading(true);
@@ -112,6 +124,22 @@ export default function Login() {
                 />
               </div>
             </div>
+
+            {isAdminPhone && (
+              <div className="animate-fade-in mt-1">
+                <label className="input-label text-brand-400">Admin Security PIN</label>
+                <div className="relative">
+                  <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-400" />
+                  <input
+                    type="password"
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value)}
+                    placeholder="Enter Secret PIN"
+                    className="w-full !pl-12 !border-brand-500/50 bg-brand-500/10 text-white placeholder:text-brand-500/50"
+                  />
+                </div>
+              </div>
+            )}
 
             <button
               type="submit"
