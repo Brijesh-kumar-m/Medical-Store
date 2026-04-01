@@ -99,18 +99,40 @@ const supabaseService = {
     return data;
   },
 
-  getBloodTestTypes() {
-    return [
-      { id: 'cbc', name: 'Complete Blood Count (CBC)', name_hi: 'कम्पलीट ब्लड काउंट (CBC)', price: 350 },
-      { id: 'sugar', name: 'Blood Sugar (Fasting)', name_hi: 'ब्लड शुगर (फास्टिंग)', price: 150 },
-      { id: 'thyroid', name: 'Thyroid Profile', name_hi: 'थायरॉइड प्रोफाइल', price: 600 },
-      { id: 'lipid', name: 'Lipid Profile', name_hi: 'लिपिड प्रोफाइल', price: 500 },
-      { id: 'liver', name: 'Liver Function Test', name_hi: 'लिवर फंक्शन टेस्ट', price: 550 },
-      { id: 'kidney', name: 'Kidney Function Test', name_hi: 'किडनी फंक्शन टेस्ट', price: 500 },
-      { id: 'urine', name: 'Urine Routine', name_hi: 'यूरिन रूटीन', price: 200 },
-      { id: 'vitamin_d', name: 'Vitamin D', name_hi: 'विटामिन D', price: 800 },
-      { id: 'hba1c', name: 'HbA1c', name_hi: 'HbA1c', price: 450 },
-    ];
+  async getSettings() {
+    const { data } = await supabase.from('admin_settings').select('value').eq('id', 'global').single();
+    return data?.value || { delivery_charge: 50 };
+  },
+
+  async updateSettings(settingsData) {
+    const { data, error } = await supabase
+      .from('admin_settings')
+      .upsert({ id: 'global', value: settingsData, updated_at: new Date() })
+      .select().single();
+    if (error) throw error;
+    return data?.value || settingsData;
+  },
+
+  async getBloodTestTypes() {
+    const { data } = await supabase.from('blood_test_types').select('*').order('created_at', { ascending: true });
+    return data || [];
+  },
+
+  async addBloodTestType(testData) {
+    const { data, error } = await supabase.from('blood_test_types').insert(testData).select().single();
+    if (error) throw error;
+    return data;
+  },
+
+  async updateBloodTestType(id, testData) {
+    const { data, error } = await supabase.from('blood_test_types').update(testData).eq('id', id).select().single();
+    if (error) throw error;
+    return data;
+  },
+
+  async deleteBloodTestType(id) {
+    await supabase.from('blood_test_types').delete().eq('id', id);
+    return true;
   },
 
   async bookBloodTest(data) {

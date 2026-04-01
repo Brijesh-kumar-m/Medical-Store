@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { getBloodTestTypes, bookBloodTest } from '../services/index.js';
 import { openWhatsApp, generateBloodTestMessage } from '../utils/whatsapp';
 import { showToast } from '../components/ui/Toast';
-import { Droplets, Calendar, Clock, MapPin, User, CheckCircle, MessageCircle, ArrowLeft } from 'lucide-react';
+import { Droplets, Calendar, Clock, MapPin, User, CheckCircle, MessageCircle, ArrowLeft, Tag } from 'lucide-react';
 import { LoadingSpinner } from '../components/ui/Loading';
 
 const timeSlots = [
@@ -159,9 +159,26 @@ export default function BloodTests() {
                   <Droplets size={20} className={isSelected ? 'text-white' : 'text-blue-400'} />
                 </div>
                 <div className="flex-1 text-left">
-                  <h4 className="font-semibold text-sm">{name}</h4>
+                  <h4 className="font-semibold text-sm leading-tight mb-1">{name}</h4>
+                  {test.offer && (
+                    <div className="mt-0.5 flex items-center">
+                      <span className="text-[#388e3c] font-bold text-[11px] flex items-center gap-1">
+                        <Tag size={10} className="fill-[#388e3c]/20" /> {test.offer}
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <span className="text-brand-400 font-bold">₹{test.price}</span>
+                <div className="text-right shrink-0 flex flex-col items-end justify-center gap-0.5">
+                  <span className="font-bold text-lg leading-none mb-0.5">₹{test.price}</span>
+                  {test.mrp && Number(test.mrp) > Number(test.price) && (
+                    <div className="flex items-center gap-1.5 opacity-90">
+                      <span className="text-surface-500 text-xs font-medium line-through leading-none mt-0.5">₹{test.mrp}</span>
+                      <span className="text-[#388e3c] font-bold text-[10px] leading-none mt-0.5 tracking-tight">
+                        {Math.round(((Number(test.mrp) - Number(test.price)) / Number(test.mrp)) * 100)}% off
+                      </span>
+                    </div>
+                  )}
+                </div>
               </button>
             );
           })}

@@ -107,6 +107,21 @@ export async function getBloodTestTypes() {
   return svc.getBloodTestTypes();
 }
 
+export async function addBloodTestType(data) {
+  const svc = await getService();
+  return svc.addBloodTestType ? svc.addBloodTestType(data) : null;
+}
+
+export async function updateBloodTestType(id, data) {
+  const svc = await getService();
+  return svc.updateBloodTestType ? svc.updateBloodTestType(id, data) : null;
+}
+
+export async function deleteBloodTestType(id) {
+  const svc = await getService();
+  return svc.deleteBloodTestType ? svc.deleteBloodTestType(id) : null;
+}
+
 export async function bookBloodTest(data) {
   const svc = await getService();
   return svc.bookBloodTest(data);
@@ -143,4 +158,15 @@ export async function uploadFile(file, path) {
 export async function getStats() {
   const svc = await getService();
   return svc.getStats();
+}
+
+// Settings
+export async function getSettings() {
+  const svc = await getService();
+  return svc.getSettings ? svc.getSettings() : { delivery_charge: 50 };
+}
+
+export async function updateSettings(data) {
+  const svc = await getService();
+  return svc.updateSettings ? svc.updateSettings(data) : data;
 }

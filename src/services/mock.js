@@ -38,6 +38,8 @@ let orders = JSON.parse(localStorage.getItem('o2_mock_orders') || '[]');
 let bloodTestBookings = JSON.parse(localStorage.getItem('o2_mock_blood_tests') || '[]');
 let prescriptions = JSON.parse(localStorage.getItem('o2_mock_prescriptions') || '[]');
 let products = JSON.parse(localStorage.getItem('o2_mock_products') || 'null') || [...mockProducts];
+let bloodTestsAdmin = JSON.parse(localStorage.getItem('o2_mock_blood_test_types') || 'null') || [...bloodTests];
+let settings = JSON.parse(localStorage.getItem('o2_mock_settings') || '{"delivery_charge": 50}');
 
 function persist() {
   localStorage.setItem('o2_mock_users', JSON.stringify(users));
@@ -45,6 +47,8 @@ function persist() {
   localStorage.setItem('o2_mock_blood_tests', JSON.stringify(bloodTestBookings));
   localStorage.setItem('o2_mock_prescriptions', JSON.stringify(prescriptions));
   localStorage.setItem('o2_mock_products', JSON.stringify(products));
+  localStorage.setItem('o2_mock_blood_test_types', JSON.stringify(bloodTestsAdmin));
+  localStorage.setItem('o2_mock_settings', JSON.stringify(settings));
 }
 
 const mockService = {
@@ -161,8 +165,35 @@ const mockService = {
   },
 
   // ======== BLOOD TESTS ========
-  getBloodTestTypes() {
-    return bloodTests;
+  async getBloodTestTypes() {
+    await delay(200);
+    return [...bloodTestsAdmin];
+  },
+
+  async addBloodTestType(data) {
+    await delay(300);
+    const test = { ...data, id: 'btt_' + Date.now() };
+    bloodTestsAdmin.push(test);
+    persist();
+    return test;
+  },
+
+  async updateBloodTestType(id, data) {
+    await delay(300);
+    const idx = bloodTestsAdmin.findIndex((t) => t.id === id);
+    if (idx >= 0) {
+      bloodTestsAdmin[idx] = { ...bloodTestsAdmin[idx], ...data };
+      persist();
+      return bloodTestsAdmin[idx];
+    }
+    return null;
+  },
+
+  async deleteBloodTestType(id) {
+    await delay(300);
+    bloodTestsAdmin = bloodTestsAdmin.filter((t) => t.id !== id);
+    persist();
+    return true;
   },
 
   async bookBloodTest(data) {
@@ -233,6 +264,19 @@ const mockService = {
       totalUsers: users.length,
       revenue: orders.reduce((sum, o) => sum + (o.total_price || 0), 0),
     };
+  },
+
+  // ======== SETTINGS (Admin) ========
+  async getSettings() {
+    await delay(100);
+    return settings;
+  },
+
+  async updateSettings(data) {
+    await delay(300);
+    settings = { ...settings, ...data };
+    persist();
+    return settings;
   },
 };
 

@@ -1,11 +1,26 @@
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getBackendProvider, setBackendProvider } from '../../config/backend.js';
+import { getSettings, updateSettings } from '../../services/index.js';
 import { showToast } from '../../components/ui/Toast';
-import { Settings, Database, Globe, AlertTriangle } from 'lucide-react';
+import { Settings, Database, Globe, AlertTriangle, Truck, Save } from 'lucide-react';
 
 export default function AdminSettings() {
   const { t, lang, switchLanguage } = useLanguage();
   const currentProvider = getBackendProvider();
+  const [settings, setSettings] = useState({ delivery_charge: 50 });
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const s = await getSettings();
+        setSettings(s || { delivery_charge: 0 });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    load();
+  }, []);
 
   function handleSwitch(provider) {
     if (provider === currentProvider) return;
@@ -16,6 +31,15 @@ export default function AdminSettings() {
     setBackendProvider(provider);
   }
 
+  async function handleSaveSettings() {
+    try {
+      await updateSettings(settings);
+      showToast(lang === 'hi' ? 'सेटिंग्स सेव हो गईं' : 'Settings saved');
+    } catch (err) {
+      showToast('Error saving settings', 'error');
+    }
+  }
+
   return (
     <div>
       <h2 className="section-title flex items-center gap-2">
@@ -23,6 +47,28 @@ export default function AdminSettings() {
         {t('admin_settings')}
       </h2>
       <p className="section-subtitle">{lang === 'hi' ? 'ऐप सेटिंग्स मैनेज करें' : 'Manage app settings'}</p>
+
+      {/* General Settings */}
+      <div className="card mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <Truck size={20} className="text-brand-400" />
+          <h3 className="font-bold">{lang === 'hi' ? 'जनरल सेटिंग्स' : 'General Settings'}</h3>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="input-label mb-2">Delivery Charge (₹)</label>
+            <input 
+              type="number" 
+              value={settings.delivery_charge} 
+              onChange={(e) => setSettings({ ...settings, delivery_charge: Number(e.target.value) })} 
+              className="w-full" 
+            />
+          </div>
+          <button onClick={handleSaveSettings} className="btn-primary w-full flex justify-center items-center gap-2">
+            <Save size={18} /> {t('save')}
+          </button>
+        </div>
+      </div>
 
       {/* Backend Switch */}
       <div className="card mb-6">

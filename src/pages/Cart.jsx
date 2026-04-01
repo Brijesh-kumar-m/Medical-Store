@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
-import { createOrder } from '../services/index.js';
+import { createOrder, getSettings } from '../services/index.js';
 import { openWhatsApp, generateOrderMessage } from '../utils/whatsapp';
 import { showToast } from '../components/ui/Toast';
 import { Minus, Plus, Trash2, ShoppingBag, MapPin, MessageCircle, ArrowLeft, CheckCircle } from 'lucide-react';
@@ -17,6 +17,21 @@ export default function Cart() {
   const [address, setAddress] = useState('');
   const [placing, setPlacing] = useState(false);
   const [orderDone, setOrderDone] = useState(null);
+  const [deliveryCharge, setDeliveryCharge] = useState(0);
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const s = await getSettings();
+        setDeliveryCharge(s?.delivery_charge || 0);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    init();
+  }, []);
+
+  const finalTotal = totalPrice + deliveryCharge;
 
   async function handlePlaceOrder() {
     if (!user || user.id === 'guest') {
@@ -34,7 +49,7 @@ export default function Cart() {
       const order = await createOrder({
         user_id: user.id,
         items: items.map((i) => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
-        total_price: totalPrice,
+        total_price: finalTotal,
         address,
         mobile: user.mobile,
       });
@@ -49,7 +64,13 @@ export default function Cart() {
   }
 
   function handleWhatsApp() {
-    const order = { total_price: totalPrice, address, mobile: user?.mobile || '' };
+    const order = { 
+      subtotal: totalPrice, 
+      delivery_charge: deliveryCharge, 
+      total_price: finalTotal, 
+      address, 
+      mobile: user?.mobile || '' 
+    };
     const msg = generateOrderMessage(order, items, lang);
     openWhatsApp(msg);
   }
@@ -151,9 +172,19 @@ export default function Cart() {
 
       {/* Total & Actions */}
       <div className="card bg-gradient-to-r from-brand-500/10 to-brand-600/10 border-brand-500/20 mb-4">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-surface-300 font-medium">{t('total')}</span>
-          <span className="text-2xl font-extrabold gradient-text">₹{totalPrice}</span>
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center justify-between text-surface-400 text-sm">
+            <span>{lang === 'hi' ? 'दवाइयों का मूल्य' : 'Subtotal'}</span>
+            <span>₹{totalPrice}</span>
+          </div>
+          <div className="flex items-center justify-between text-surface-400 text-sm">
+            <span>{lang === 'hi' ? 'डिलीवरी चार्ज' : 'Delivery Charge'}</span>
+            <span>₹{deliveryCharge}</span>
+          </div>
+          <div className="flex items-center justify-between pt-2 border-t border-brand-500/20">
+            <span className="text-surface-100 font-bold">{t('total')}</span>
+            <span className="text-2xl font-extrabold gradient-text">₹{finalTotal}</span>
+          </div>
         </div>
 
         <div className="flex flex-col gap-3">

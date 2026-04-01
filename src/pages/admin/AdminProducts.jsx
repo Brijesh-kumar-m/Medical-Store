@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { getProducts, addProduct, updateProduct, deleteProduct } from '../../services/index.js';
+import { getProducts, addProduct, updateProduct, deleteProduct, uploadFile } from '../../services/index.js';
 import { LoadingSpinner } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
 import { Plus, Edit3, Trash2, X, Save, Package } from 'lucide-react';
@@ -8,8 +8,8 @@ import { Plus, Edit3, Trash2, X, Save, Package } from 'lucide-react';
 const categories = ['fever_cold', 'pain_relief', 'vitamins', 'diabetes', 'first_aid', 'general'];
 
 const emptyProduct = {
-  name: '', name_hi: '', price: '', category: 'general',
-  image: '', requires_prescription: false, in_stock: true,
+  name: '', name_hi: '', price: '', mrp: '', category: 'general',
+  image: '', offer: '', requires_prescription: false, in_stock: true,
 };
 
 export default function AdminProducts() {
@@ -128,9 +128,43 @@ export default function AdminProducts() {
                 <label className="input-label">{t('product_name')} (हिंदी)</label>
                 <input value={form.name_hi} onChange={(e) => setForm({ ...form, name_hi: e.target.value })} className="w-full" />
               </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="input-label">Selling Price (₹)</label>
+                  <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="w-full" />
+                </div>
+                <div>
+                  <label className="input-label">MRP / Old Price (₹)</label>
+                  <input type="number" value={form.mrp || ''} onChange={(e) => setForm({ ...form, mrp: e.target.value })} className="w-full" placeholder="e.g. 50" />
+                </div>
+              </div>
               <div>
-                <label className="input-label">{t('product_price')}</label>
-                <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="w-full" />
+                <label className="input-label">Offer Text (Optional)</label>
+                <input value={form.offer || ''} onChange={(e) => setForm({ ...form, offer: e.target.value })} placeholder="e.g., Free Delivery, BOGO" className="w-full" />
+              </div>
+              <div>
+                <label className="input-label">Product Image (Optional)</label>
+                <div className="flex gap-2 items-center">
+                  <input type="file" accept="image/*" onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const url = await uploadFile(file, 'products');
+                      setForm({ ...form, image: url });
+                    }
+                  }} className="w-full text-sm text-surface-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-surface-700 file:text-white hover:file:bg-surface-600" />
+                  {form.image && (
+                    <div className="relative shrink-0">
+                      <img src={form.image} className="w-12 h-12 rounded-lg object-cover border border-surface-600" />
+                      <button
+                        type="button"
+                        onClick={() => setForm({ ...form, image: '' })}
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 shadow-md border-2 border-surface-800"
+                      >
+                        <X size={10} />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
               <div>
                 <label className="input-label mb-3">{t('product_category')}</label>
