@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { LayoutDashboard, Package, ShoppingCart, Droplets, Settings, ArrowLeft, Shield, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Droplets, Settings, ArrowLeft, Shield, Menu, X, FileImage } from 'lucide-react';
 
 export default function AdminLayout() {
   const { user, isAdmin } = useAuth();
@@ -24,6 +24,7 @@ export default function AdminLayout() {
     { to: '/admin/products', icon: Package, label: t('admin_products') },
     { to: '/admin/orders', icon: ShoppingCart, label: t('admin_orders') },
     { to: '/admin/blood-tests', icon: Droplets, label: t('admin_blood_tests') },
+    { to: '/admin/prescriptions', icon: FileImage, label: lang === 'hi' ? 'प्रिस्क्रिप्शन' : 'Prescriptions' },
     { to: '/admin/settings', icon: Settings, label: t('admin_settings') },
   ];
 

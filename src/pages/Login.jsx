@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Phone, ArrowRight, UserCheck, Eye, Lock } from 'lucide-react';
+import { User, Phone, ArrowRight, UserCheck, Eye, Lock, ShieldAlert } from 'lucide-react';
 import { showToast } from '../components/ui/Toast';
+import { checkRateLimit } from '../utils/rateLimit';
 
 export default function Login() {
   const { t, lang } = useLanguage();
@@ -15,6 +16,14 @@ export default function Login() {
   const [mobile, setMobile] = useState('');
   const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) { setRateLimited(false); return; }
+    const timer = setTimeout(() => setCooldown(c => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [cooldown]);
 
   const adminMobiles = (import.meta.env.VITE_ADMIN_MOBILES || '').split(',');
   const isAdminPhone = mobile.length === 10 && adminMobiles.includes(mobile);
@@ -27,6 +36,15 @@ export default function Login() {
     }
     if (!/^\d{10}$/.test(mobile)) {
       showToast(lang === 'hi' ? 'कृपया 10 अंकों का मोबाइल नंबर दर्ज करें' : 'Please enter a valid 10-digit mobile number', 'error');
+      return;
+    }
+
+    // Rate limit check
+    const limit = checkRateLimit(`login_${mobile}`, 5, 60000);
+    if (!limit.allowed) {
+      setRateLimited(true);
+      setCooldown(limit.resetIn);
+      showToast(lang === 'hi' ? `बहुत ज़्यादा प्रयास। ${limit.resetIn}s बाद करें` : `Too many attempts. Try after ${limit.resetIn}s`, 'error');
       return;
     }
 
@@ -141,9 +159,16 @@ export default function Login() {
               </div>
             )}
 
+            {rateLimited && (
+              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm animate-fade-in">
+                <ShieldAlert size={18} />
+                <span>{lang === 'hi' ? `${cooldown}s बाद दोबारा कोशिश करें` : `Try again in ${cooldown}s`}</span>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || rateLimited}
               className="btn-primary w-full flex items-center justify-center gap-2 text-lg py-4"
               id="login-submit"
             >

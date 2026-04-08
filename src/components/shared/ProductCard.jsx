@@ -2,6 +2,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useCart } from '../../contexts/CartContext';
 import { ShoppingCart, AlertTriangle, Pill, Tag, Plus } from 'lucide-react';
 import { showToast } from '../ui/Toast';
+import OptimizedImage from '../ui/OptimizedImage';
 
 export default function ProductCard({ product }) {
   const { t, lang } = useLanguage();
@@ -21,11 +22,18 @@ export default function ProductCard({ product }) {
   return (
     <div className="card-interactive group" id={`product-${product.id}`}>
       {/* Product Image Area */}
-      <div className="relative h-28 sm:h-32 rounded-xl bg-gradient-to-br from-surface-800 to-surface-700 mb-2 flex items-center justify-center overflow-hidden">
+      <div className="relative h-28 sm:h-32 rounded-xl overflow-hidden mb-2">
         {product.image ? (
-          <img src={product.image} alt={name} className="w-full h-full object-cover rounded-xl" />
+          <OptimizedImage
+            src={product.image}
+            alt={name}
+            className="w-full h-full rounded-xl"
+            fallbackIcon={<Pill size={32} className="text-brand-500/40" />}
+          />
         ) : (
-          <Pill size={32} className="text-brand-500/40" />
+          <div className="w-full h-full bg-gradient-to-br from-surface-800 to-surface-700 flex items-center justify-center">
+            <Pill size={32} className="text-brand-500/40" />
+          </div>
         )}
         {product.requires_prescription && (
           <div className="absolute top-1.5 left-1.5 badge-warning text-[10px] z-10 !px-1.5 !py-0.5">

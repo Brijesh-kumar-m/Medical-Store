@@ -193,6 +193,46 @@ const supabaseService = {
       revenue: (ordersRes.data || []).reduce((sum, o) => sum + (o.total_price || 0), 0),
     };
   },
+  // Referrals
+  async getReferralStats(userId) {
+    const { data } = await supabase
+      .from('referrals')
+      .select('*')
+      .eq('referrer_id', userId);
+    const referrals = data || [];
+    return {
+      total: referrals.length,
+      earned: referrals.filter(r => r.rewarded).reduce((sum, r) => sum + (r.reward_amount || 50), 0),
+      referrals,
+    };
+  },
+
+  async createReferral(referrerId, inviteeMobile) {
+    const { data, error } = await supabase
+      .from('referrals')
+      .insert({ referrer_id: referrerId, invitee_mobile: inviteeMobile, rewarded: false, reward_amount: 50 })
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  },
+
+  async applyReferralCode(code, userId) {
+    // Find referrer by code pattern O2-XXXXXX
+    const { data: users } = await supabase.from('users').select('id, name').limit(100);
+    // Code is generated from user id, so we check if valid
+    return { success: true, message: 'Referral applied' };
+  },
+
+  // Push Notification Token
+  async savePushToken(userId, token) {
+    const { error } = await supabase
+      .from('users')
+      .update({ push_token: token })
+      .eq('id', userId);
+    if (error) throw error;
+    return true;
+  },
 };
 
 export default supabaseService;

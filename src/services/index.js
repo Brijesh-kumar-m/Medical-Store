@@ -170,3 +170,20 @@ export async function updateSettings(data) {
   const svc = await getService();
   return svc.updateSettings ? svc.updateSettings(data) : data;
 }
+
+// Referrals
+export async function getReferralStats(userId) {
+  const svc = await getService();
+  return svc.getReferralStats ? svc.getReferralStats(userId) : { total: 0, earned: 0, referrals: [] };
+}
+
+export async function createReferral(referrerId, inviteeMobile) {
+  const svc = await getService();
+  return svc.createReferral ? svc.createReferral(referrerId, inviteeMobile) : null;
+}
+
+// Push Notifications
+export async function savePushToken(userId, token) {
+  const svc = await getService();
+  return svc.savePushToken ? svc.savePushToken(userId, token) : null;
+}
