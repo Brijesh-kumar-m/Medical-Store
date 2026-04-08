@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getOrders, updateOrderStatus } from '../../services/index.js';
-import { LoadingSpinner } from '../../components/ui/Loading';
+import { SkeletonCard } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
 import { Package, ChevronDown, Phone, MapPin, User } from 'lucide-react';
 
@@ -39,7 +39,7 @@ export default function AdminOrders() {
     delivered: 'bg-green-500/20 text-green-400 border-green-500/30',
   };
 
-  if (loading) return <LoadingSpinner text={t('loading')} />;
+  if (loading) return <SkeletonCard count={3} />;
 
   return (
     <div>

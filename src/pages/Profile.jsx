@@ -1,7 +1,7 @@
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Phone, Package, Droplets, FileImage, LogOut, Shield, ArrowRight } from 'lucide-react';
+import { User, Phone, Package, Droplets, FileImage, LogOut, Shield, ArrowRight, Gift } from 'lucide-react';
 
 export default function Profile() {
   const { t, lang } = useLanguage();
@@ -27,6 +27,7 @@ export default function Profile() {
     { to: '/orders', icon: Package, label: t('orders'), desc: lang === 'hi' ? 'अपने सभी ऑर्डर देखें' : 'View all your orders' },
     { to: '/blood-tests', icon: Droplets, label: t('blood_tests'), desc: lang === 'hi' ? 'ब्लड टेस्ट बुक करें' : 'Book a blood test' },
     { to: '/prescriptions', icon: FileImage, label: t('prescriptions'), desc: lang === 'hi' ? 'प्रिस्क्रिप्शन अपलोड करें' : 'Upload prescriptions' },
+    { to: '/referral', icon: Gift, label: lang === 'hi' ? 'रेफ़र करें और कमाएँ' : 'Refer & Earn', desc: lang === 'hi' ? 'दोस्तों को शेयर करें, रिवॉर्ड पाएँ' : 'Share with friends, earn rewards' },
   ];
 
   if (isAdmin) {

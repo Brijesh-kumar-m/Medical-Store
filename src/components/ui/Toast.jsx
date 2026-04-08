@@ -27,12 +27,14 @@ export default function ToastContainer() {
   const icons = {
     success: <CheckCircle size={20} className="text-green-400 shrink-0" />,
     error: <AlertCircle size={20} className="text-red-400 shrink-0" />,
+    warning: <AlertCircle size={20} className="text-amber-400 shrink-0" />,
     info: <Info size={20} className="text-blue-400 shrink-0" />,
   };
 
   const borderColors = {
     success: 'border-green-500/30',
     error: 'border-red-500/30',
+    warning: 'border-amber-500/30',
     info: 'border-blue-500/30',
   };
 

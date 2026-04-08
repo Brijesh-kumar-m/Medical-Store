@@ -4,7 +4,7 @@ import {
   getBloodTestBookings, updateBloodTestStatus, uploadFile,
   getBloodTestTypes, addBloodTestType, updateBloodTestType, deleteBloodTestType 
 } from '../../services/index.js';
-import { LoadingSpinner } from '../../components/ui/Loading';
+import { SkeletonCard } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
 import { Droplets, ChevronDown, Upload, FileText, Plus, Edit3, Trash2, X, Save, Calendar, MapPin, IndianRupee, User, Phone } from 'lucide-react';
 
@@ -124,7 +124,7 @@ export default function AdminBloodTests() {
 
       {/* Bookings View */}
       {activeTab === 'bookings' && (
-        loadingBookings ? <LoadingSpinner text={t('loading')} /> :
+        loadingBookings ? <SkeletonCard count={3} /> :
         bookings.length === 0 ? (
           <div className="card text-center py-12">
             <Droplets size={40} className="text-surface-600 mx-auto mb-3" />
@@ -199,23 +199,23 @@ export default function AdminBloodTests() {
               <Plus size={18} /> {lang === 'hi' ? 'नया टेस्ट' : 'Add Test'}
             </button>
           </div>
-          {loadingTests ? <LoadingSpinner text={t('loading')} /> : (
+          {loadingTests ? <SkeletonCard count={3} /> : (
             <div className="space-y-3">
-              {testTypes.map((t) => (
-                <div key={t.id} className="card flex items-center gap-4">
+              {testTypes.map((test) => (
+                <div key={test.id} className="card flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-surface-700 flex items-center justify-center shrink-0">
                     <Droplets size={20} className="text-brand-400" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-sm truncate">{lang === 'hi' && t.name_hi ? t.name_hi : t.name}</h4>
-                    {t.offer && <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full mt-1 border border-emerald-500/20 inline-block font-bold">{t.offer}</span>}
+                    <h4 className="font-semibold text-sm truncate">{lang === 'hi' && test.name_hi ? test.name_hi : test.name}</h4>
+                    {test.offer && <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full mt-1 border border-emerald-500/20 inline-block font-bold">{test.offer}</span>}
                   </div>
-                  <span className="text-brand-400 font-bold shrink-0">₹{t.price}</span>
+                  <span className="text-brand-400 font-bold shrink-0">₹{test.price}</span>
                   <div className="flex gap-1 shrink-0">
-                    <button onClick={() => { setEditingTest(t); setTestForm({...t}); }} className="p-2 rounded-lg bg-surface-700 hover:bg-surface-600">
+                    <button onClick={() => { setEditingTest(test); setTestForm({...test}); }} className="p-2 rounded-lg bg-surface-700 hover:bg-surface-600">
                       <Edit3 size={14} className="text-blue-400" />
                     </button>
-                    <button onClick={() => handleDeleteTest(t.id)} className="p-2 rounded-lg bg-surface-700 hover:bg-red-500/20">
+                    <button onClick={() => handleDeleteTest(test.id)} className="p-2 rounded-lg bg-surface-700 hover:bg-red-500/20">
                       <Trash2 size={14} className="text-red-400" />
                     </button>
                   </div>

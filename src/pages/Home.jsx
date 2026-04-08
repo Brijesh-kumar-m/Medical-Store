@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { Pill, Droplets, FileImage, MessageCircle, ArrowRight, Heart, Shield, Truck, Phone } from 'lucide-react';
+import { Pill, Droplets, FileImage, MessageCircle, ArrowRight, Heart, Shield, Truck, Phone, Gift } from 'lucide-react';
 import { openWhatsApp } from '../utils/whatsapp';
 
 export default function Home() {
@@ -32,6 +32,14 @@ export default function Home() {
       desc: lang === 'hi' ? 'प्रिस्क्रिप्शन फ़ोटो भेजें' : 'Send prescription photo',
       color: 'from-violet-500 to-purple-600',
       shadow: 'shadow-violet-500/30',
+    },
+    {
+      to: '/referral',
+      icon: Gift,
+      label: lang === 'hi' ? 'रेफ़र करें और कमाएँ' : 'Refer & Earn',
+      desc: lang === 'hi' ? 'दोस्तों को शेयर करें, रिवॉर्ड पाएँ' : 'Share & earn ₹50 per referral',
+      color: 'from-amber-500 to-orange-600',
+      shadow: 'shadow-amber-500/30',
     },
   ];
 

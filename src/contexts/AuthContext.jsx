@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { loginSimple as loginSimpleAPI, getUser } from '../services/index.js';
+import { loginSimple as loginSimpleAPI } from '../services/index.js';
 import config from '../config/backend.js';
 
 const AuthContext = createContext();

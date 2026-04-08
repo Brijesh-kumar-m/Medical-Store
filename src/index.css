@@ -125,7 +125,7 @@
   }
 
   .card {
-    @apply glass rounded-3xl p-6 transition-all duration-300
+    @apply glass rounded-3xl p-4 sm:p-6 transition-all duration-300
            hover:border-brand-500/30 hover:shadow-[0_8px_30px_rgba(4,200,165,0.08)];
   }
 
@@ -144,7 +144,7 @@
   .badge-danger { @apply badge bg-red-500/10 text-red-500 border border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.1)]; }
 
   .page-container {
-    @apply max-w-6xl mx-auto px-5 py-8 pb-32;
+    @apply max-w-6xl mx-auto px-4 sm:px-5 py-6 pb-28;
   }
 
   .section-title {
@@ -174,15 +174,17 @@
 
   /* Premium Bottom Nav */
   .bottom-nav-container {
-    @apply fixed bottom-4 left-4 right-4 z-50 max-w-lg mx-auto;
+    @apply fixed bottom-3 left-3 right-3 z-50 max-w-lg mx-auto;
   }
   .bottom-nav-glass {
-    @apply glass shadow-[0_20px_40px_rgba(0,0,0,0.5)] border border-surface-600/40 rounded-[2.5rem] p-1.5 flex items-center justify-around bg-surface-900/70;
+    @apply glass shadow-[0_20px_40px_rgba(0,0,0,0.5)] border border-surface-600/40 rounded-[2rem] p-1 flex items-center justify-around bg-surface-900/70;
   }
 
   .nav-item {
-    @apply relative flex flex-col items-center justify-center gap-1 text-[11px] font-bold
-           transition-all duration-300 w-16 h-14 rounded-2xl;
+    @apply relative flex flex-col items-center justify-center gap-0.5 text-[11px] font-bold
+           transition-all duration-300 h-12 rounded-2xl;
+    min-width: 0;
+    width: 3.25rem;
   }
 
   .nav-item-active {

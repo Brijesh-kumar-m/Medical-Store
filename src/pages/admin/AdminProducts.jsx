@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getProducts, addProduct, updateProduct, deleteProduct, uploadFile } from '../../services/index.js';
-import { LoadingSpinner } from '../../components/ui/Loading';
+import { SkeletonCard } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
 import { Plus, Edit3, Trash2, X, Save, Package } from 'lucide-react';
 
@@ -70,7 +70,7 @@ export default function AdminProducts() {
     }
   }
 
-  if (loading) return <LoadingSpinner text={t('loading')} />;
+  if (loading) return <SkeletonCard count={4} />;
 
   return (
     <div>

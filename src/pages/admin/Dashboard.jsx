@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getStats } from '../../services/index.js';
-import { LoadingSpinner } from '../../components/ui/Loading';
+import { SkeletonStats } from '../../components/ui/Loading';
 import { ShoppingCart, Droplets, Users, IndianRupee, TrendingUp } from 'lucide-react';
 
 export default function Dashboard() {
@@ -24,7 +24,7 @@ export default function Dashboard() {
     }
   }
 
-  if (loading) return <LoadingSpinner text={t('loading')} />;
+  if (loading) return <SkeletonStats count={4} />;
 
   const cards = [
     {

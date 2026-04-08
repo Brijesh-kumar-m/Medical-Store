@@ -25,8 +25,11 @@ export default function BottomNav() {
     links.push({ to: '/admin', icon: Shield, label: 'Admin' });
   }
 
+  // Dynamic sizing: if 6+ items, make icons and text smaller
+  const hasMany = links.length > 5;
+
   return (
-    <nav className="bottom-nav-container">
+    <nav className="bottom-nav-container" id="bottom-nav">
       <div className="bottom-nav-glass">
         {links.map((link) => (
           <NavLink
@@ -35,16 +38,16 @@ export default function BottomNav() {
             end={link.to === '/'}
           >
             {({ isActive }) => (
-              <div className={`nav-item ${isActive ? 'nav-item-active' : 'nav-item-inactive'}`}>
+              <div className={`nav-item ${hasMany ? '!w-12 !h-12' : ''} ${isActive ? 'nav-item-active' : 'nav-item-inactive'}`}>
                 <div className="relative">
-                  <link.icon size={22} strokeWidth={isActive ? 2.5 : 2} className="transition-all duration-300" />
+                  <link.icon size={hasMany ? 18 : 20} strokeWidth={isActive ? 2.5 : 2} className="transition-all duration-300" />
                   {link.badge > 0 && (
-                    <span className="absolute -top-1.5 -right-2.5 bg-brand-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-lg shadow-brand-500/50 animate-bounce-gentle">
+                    <span className="absolute -top-1.5 -right-2.5 bg-brand-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-lg shadow-brand-500/50 animate-bounce-gentle">
                       {link.badge > 9 ? '9+' : link.badge}
                     </span>
                   )}
                 </div>
-                <span className="text-[10px] mt-1 tracking-tight leading-none">{link.label}</span>
+                <span className={`${hasMany ? 'text-[8px]' : 'text-[10px]'} mt-0.5 tracking-tight leading-none truncate max-w-full`}>{link.label}</span>
               </div>
             )}
           </NavLink>

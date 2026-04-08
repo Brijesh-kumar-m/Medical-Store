@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getProducts } from '../services/index.js';
 import ProductCard from '../components/shared/ProductCard';
-import { LoadingSpinner } from '../components/ui/Loading';
+import { SkeletonProductGrid } from '../components/ui/Loading';
 import { Search, Filter } from 'lucide-react';
 
 const categories = [
@@ -90,14 +90,14 @@ export default function Products() {
 
       {/* Product Grid */}
       {loading ? (
-        <LoadingSpinner text={t('loading')} />
+        <SkeletonProductGrid count={6} />
       ) : filtered.length === 0 ? (
         <div className="card text-center py-12">
           <Filter size={40} className="text-surface-600 mx-auto mb-3" />
           <p className="text-surface-400">{t('no_items')}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

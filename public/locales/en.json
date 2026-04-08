@@ -131,5 +131,14 @@
   "call_us": "Call Us",
   "need_help": "Need Help?",
   "about_us": "About Us",
-  "about_text": "O2Clinic brings affordable healthcare to your doorstep. We deliver OTC medicines, collect blood samples at home, and accept prescriptions digitally."
+  "about_text": "O2Clinic brings affordable healthcare to your doorstep. We deliver OTC medicines, collect blood samples at home, and accept prescriptions digitally.",
+  "refer_earn": "Refer & Earn",
+  "repeat_order": "Repeat Order",
+  "download_report": "Download Report",
+  "offline_msg": "You are offline — Some features may not work",
+  "referral_code": "Your Referral Code",
+  "share_link": "Share Link",
+  "referrals": "Referrals",
+  "earned": "Earned",
+  "how_it_works": "How it Works"
 }
