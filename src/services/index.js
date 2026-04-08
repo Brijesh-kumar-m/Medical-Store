@@ -148,6 +148,11 @@ export async function getPrescriptions(userId) {
   return svc.getPrescriptions(userId);
 }
 
+export async function updatePrescriptionStatus(id, status) {
+  const svc = await getService();
+  return svc.updatePrescriptionStatus ? svc.updatePrescriptionStatus(id, status) : null;
+}
+
 // File Upload
 export async function uploadFile(file, path) {
   const svc = await getService();

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { getPrescriptions, uploadFile } from '../../services/index.js';
+import { getPrescriptions, updatePrescriptionStatus } from '../../services/index.js';
 import { SkeletonCard } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
 import { FileImage, Check, X, Clock, Phone, User, ChevronDown, Eye, MessageCircle } from 'lucide-react';
@@ -22,6 +22,17 @@ export default function AdminPrescriptions() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleUpdateStatus(id, newStatus) {
+    try {
+      await updatePrescriptionStatus(id, newStatus);
+      showToast(lang === 'hi' ? 'स्थिति अपडेट हो गई' : 'Status updated', 'success');
+      loadPrescriptions(); // Refresh the list
+    } catch (err) {
+      console.error(err);
+      showToast(lang === 'hi' ? 'अपडेट विफल' : 'Update failed', 'error');
     }
   }
 
@@ -119,21 +130,40 @@ export default function AdminPrescriptions() {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2 mt-3 pt-3 border-t border-surface-700/50">
-                <a
-                  href={rx.image_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-surface-800 text-surface-300 hover:bg-surface-700 text-xs font-semibold transition-all"
-                >
-                  <Eye size={14} /> {lang === 'hi' ? 'देखें' : 'View'}
-                </a>
-                <button
-                  onClick={() => contactOnWhatsApp(rx)}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-green-500/10 text-green-400 hover:bg-green-500/20 text-xs font-semibold transition-all border border-green-500/20"
-                >
-                  <MessageCircle size={14} /> WhatsApp
-                </button>
+              <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-surface-700/50">
+                <div className="flex gap-2">
+                  <a
+                    href={rx.image_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-surface-800 text-surface-300 hover:bg-surface-700 text-xs font-semibold transition-all"
+                  >
+                    <Eye size={14} /> {lang === 'hi' ? 'देखें' : 'View'}
+                  </a>
+                  <button
+                    onClick={() => contactOnWhatsApp(rx)}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-green-500/10 text-green-400 hover:bg-green-500/20 text-xs font-semibold transition-all border border-green-500/20"
+                  >
+                    <MessageCircle size={14} /> WhatsApp
+                  </button>
+                </div>
+                
+                {(rx.status === 'pending' || !rx.status) && (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleUpdateStatus(rx.id, 'rejected')}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 text-xs font-semibold transition-all border border-red-500/20"
+                    >
+                      <X size={14} /> {lang === 'hi' ? 'अस्वीकृत' : 'Reject'}
+                    </button>
+                    <button
+                      onClick={() => handleUpdateStatus(rx.id, 'approved')}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-brand-500 text-white hover:bg-brand-600 text-xs font-bold transition-all shadow-lg shadow-brand-500/30"
+                    >
+                      <Check size={14} /> {lang === 'hi' ? 'स्वीकृत' : 'Approve'}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}

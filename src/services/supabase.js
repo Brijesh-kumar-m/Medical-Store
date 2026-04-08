@@ -172,6 +172,12 @@ const supabaseService = {
     return data || [];
   },
 
+  async updatePrescriptionStatus(id, status) {
+    const { data, error } = await supabase.from('prescriptions').update({ status }).eq('id', id).select().single();
+    if (error) throw error;
+    return data;
+  },
+
   async uploadFile(file, path) {
     const fileName = `${path}/${Date.now()}_${file.name}`;
     const { error } = await supabase.storage.from('uploads').upload(fileName, file);
