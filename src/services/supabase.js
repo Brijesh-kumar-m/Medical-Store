@@ -241,4 +241,5 @@ const supabaseService = {
   },
 };
 
+export { supabase };
 export default supabaseService;

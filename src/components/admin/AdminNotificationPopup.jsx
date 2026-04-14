@@ -6,43 +6,33 @@ import {
   Clock, ChevronRight, Volume2, VolumeX, Trash2
 } from 'lucide-react';
 
-// ──── Supabase client for realtime ────
-const supabase = config.supabase?.url
-  ? createClient(config.supabase.url, config.supabase.anonKey)
-  : null;
+import { supabase } from '../../services/supabase.js';
 
-// ──── Notification Sound (Web Audio API) ────
+// Notification Sound (Web Audio API)
 function playNotificationSound() {
   try {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
-    // First tone
-    const osc1 = audioCtx.createOscillator();
-    const gain1 = audioCtx.createGain();
-    osc1.connect(gain1);
-    gain1.connect(audioCtx.destination);
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(880, audioCtx.currentTime);
-    gain1.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-    osc1.start(audioCtx.currentTime);
-    osc1.stop(audioCtx.currentTime + 0.3);
+    const playTone = (freq, startTime, duration) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+      gain.gain.setValueAtTime(0.3, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    };
 
-    // Second tone (higher)
-    const osc2 = audioCtx.createOscillator();
-    const gain2 = audioCtx.createGain();
-    osc2.connect(gain2);
-    gain2.connect(audioCtx.destination);
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(1320, audioCtx.currentTime + 0.15);
-    gain2.gain.setValueAtTime(0.3, audioCtx.currentTime + 0.15);
-    gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-    osc2.start(audioCtx.currentTime + 0.15);
-    osc2.stop(audioCtx.currentTime + 0.5);
+    playTone(880, audioCtx.currentTime, 0.3);
+    playTone(1320, audioCtx.currentTime + 0.15, 0.35);
   } catch (e) {
-    // Audio not supported
+    console.warn('Audio not supported or blocked');
   }
 }
+
 
 // ──── Notification type config ────
 const NOTIF_CONFIG = {
@@ -171,6 +161,15 @@ function NotificationDrawer({ notifications, isOpen, onClose, onClear, lang }) {
             )}
           </div>
           <div className="flex items-center gap-1">
+            <button
+              onClick={() => {
+                const testEvent = new CustomEvent('force-test-notification');
+                window.dispatchEvent(testEvent);
+              }}
+              className="px-2 py-1 rounded-lg text-[10px] bg-surface-800 text-surface-400 hover:text-white border border-surface-700 font-bold"
+            >
+              TEST
+            </button>
             {notifications.length > 0 && (
               <button
                 onClick={onClear}
@@ -311,32 +310,36 @@ export default function AdminNotificationSystem({ lang = 'en' }) {
           tag: id,
         });
       } catch (e) {
-        // SW or notification not supported
+        console.warn('Browser notification blocked or unsupported');
       }
     }
   }, [lang, soundEnabled]);
 
   // Setup Supabase Realtime subscriptions
   useEffect(() => {
-    if (!supabase) return;
+    if (!supabase) {
+      console.error('[AdminNotifications] Supabase client is missing. Check your environment variables.');
+      return;
+    }
+
+    console.log('[AdminNotifications] Subscribing to Supabase Realtime using shared client...');
 
     // Subscribe to orders table
     const ordersChannel = supabase
       .channel('admin-orders-realtime')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'orders' },
+        { event: '*', schema: 'public', table: 'orders' },
         (payload) => {
-          if (hasInitialLoadRef.current.orders) {
+          console.log('[AdminNotifications] Order payload:', payload);
+          if (payload.eventType === 'INSERT') {
             addNotification('order', payload.new);
           }
         }
       )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          // Mark initial load complete after a short delay
-          setTimeout(() => { hasInitialLoadRef.current.orders = true; }, 2000);
-        }
+      .subscribe((status, err) => {
+        if (err) console.error('[AdminNotifications] Order channel error:', err);
+        else console.log('[AdminNotifications] Order channel status:', status);
       });
 
     // Subscribe to prescriptions table
@@ -344,17 +347,16 @@ export default function AdminNotificationSystem({ lang = 'en' }) {
       .channel('admin-prescriptions-realtime')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'prescriptions' },
+        { event: '*', schema: 'public', table: 'prescriptions' },
         (payload) => {
-          if (hasInitialLoadRef.current.prescriptions) {
+          if (payload.eventType === 'INSERT') {
+            console.log('[AdminNotifications] New Prescription:', payload.new);
             addNotification('prescription', payload.new);
           }
         }
       )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          setTimeout(() => { hasInitialLoadRef.current.prescriptions = true; }, 2000);
-        }
+      .subscribe((status, err) => {
+        if (err) console.error('[AdminNotifications] Prescription channel error:', err);
       });
 
     // Subscribe to blood_tests table
@@ -362,23 +364,29 @@ export default function AdminNotificationSystem({ lang = 'en' }) {
       .channel('admin-blood-tests-realtime')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'blood_tests' },
+        { event: '*', schema: 'public', table: 'blood_tests' },
         (payload) => {
-          if (hasInitialLoadRef.current.blood_tests) {
+          if (payload.eventType === 'INSERT') {
+            console.log('[AdminNotifications] New Blood Test:', payload.new);
             addNotification('blood_test', payload.new);
           }
         }
       )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          setTimeout(() => { hasInitialLoadRef.current.blood_tests = true; }, 2000);
-        }
+      .subscribe((status, err) => {
+        if (err) console.error('[AdminNotifications] Blood Test channel error:', err);
       });
 
     subscriptionsRef.current = [ordersChannel, prescriptionsChannel, bloodTestsChannel];
 
+    // Global testing listener
+    const handleTest = () => {
+      addNotification('order', { id: `Test-${Date.now()}`, total_price: 999, items: [{name: 'Test Item', qty: 1}] });
+    };
+    window.addEventListener('force-test-notification', handleTest);
+
     return () => {
       subscriptionsRef.current.forEach(ch => supabase.removeChannel(ch));
+      window.removeEventListener('force-test-notification', handleTest);
     };
   }, [addNotification]);
 
@@ -429,8 +437,8 @@ export default function AdminNotificationSystem({ lang = 'en' }) {
         />
       </div>
 
-      {/* Floating popups (top-right corner) */}
-      <div className="fixed top-4 right-4 z-[200] flex flex-col gap-3 pointer-events-none max-w-sm w-full">
+      {/* Floating popups */}
+      <div className="fixed top-20 right-4 sm:right-6 z-[200] flex flex-col gap-3 pointer-events-none max-w-[320px] w-[calc(100vw-2rem)] sm:w-full">
         {popups.map((popup) => (
           <div key={popup.id} className="pointer-events-auto">
             <FloatingNotification
