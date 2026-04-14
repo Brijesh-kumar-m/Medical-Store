@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import AdminNotificationSystem from '../../components/admin/AdminNotificationPopup';
 import { LayoutDashboard, Package, ShoppingCart, Droplets, Settings, ArrowLeft, Shield, Menu, X, FileImage } from 'lucide-react';
 
 export default function AdminLayout() {
@@ -87,12 +88,13 @@ export default function AdminLayout() {
 
       {/* Main content */}
       <div className="flex-1 min-w-0">
-        {/* Mobile header */}
-        <div className="lg:hidden sticky top-0 z-30 glass border-b border-surface-700/50 px-4 py-3 flex items-center gap-3">
-          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-xl bg-surface-800 border border-surface-600">
+        {/* Top header bar with notification bell */}
+        <div className="sticky top-0 z-30 glass border-b border-surface-700/50 px-4 py-3 flex items-center gap-3">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-xl bg-surface-800 border border-surface-600">
             <Menu size={20} />
           </button>
-          <h2 className="font-bold gradient-text">{t('admin')}</h2>
+          <h2 className="font-bold gradient-text flex-1">{t('admin')}</h2>
+          <AdminNotificationSystem lang={lang} />
         </div>
 
         <div className="p-4 lg:p-6 max-w-6xl">

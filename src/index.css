@@ -256,3 +256,70 @@
   from { opacity: 1; transform: translateY(0) scale(1); }
   to { opacity: 0; transform: translateY(120%) scale(0.9); }
 }
+
+/* ──── Admin Notification Popup Animations ──── */
+.admin-notif-popup {
+  position: relative;
+  animation: adminNotifSlideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes adminNotifSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(120%) scale(0.8);
+  }
+  60% {
+    transform: translateX(-8%) scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.admin-notif-progress {
+  animation: adminNotifProgress 6s linear forwards;
+}
+
+@keyframes adminNotifProgress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+.admin-bell-ring {
+  animation: bellRing 0.8s ease-in-out;
+}
+
+@keyframes bellRing {
+  0% { transform: rotate(0); }
+  15% { transform: rotate(14deg); }
+  30% { transform: rotate(-14deg); }
+  45% { transform: rotate(10deg); }
+  60% { transform: rotate(-10deg); }
+  75% { transform: rotate(4deg); }
+  100% { transform: rotate(0); }
+}
+
+.admin-notif-badge {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.admin-drawer-enter {
+  animation: drawerSlideDown 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes drawerSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
