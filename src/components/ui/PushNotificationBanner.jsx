@@ -3,6 +3,9 @@ import { Bell, BellOff, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { savePushToken } from '../../services/index.js';
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getMessaging, getToken } from 'firebase/messaging';
+import config from '../../config/backend.js';
 
 export default function PushNotificationBanner() {
   const { user } = useAuth();
@@ -31,26 +34,39 @@ export default function PushNotificationBanner() {
       setPermission(result);
 
       if (result === 'granted') {
-        // Show a test notification
-        new Notification('O2Clinic 🏥', {
-          body: lang === 'hi' ? 'नोटिफिकेशन चालू! ऑर्डर अपडेट मिलेंगे।' : 'Notifications enabled! You\'ll get order updates.',
-          icon: '/favicon.svg',
+        if (!('serviceWorker' in navigator)) {
+          console.warn('[Push] Service worker not supported.');
+          setShow(false);
+          return;
+        }
+
+        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        
+        // Ensure Firebase is initialized
+        const app = getApps().length === 0 ? initializeApp(config.firebase) : getApp();
+        const messaging = getMessaging(app);
+
+        const currentToken = await getToken(messaging, {
+          vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+          serviceWorkerRegistration: registration,
         });
 
-        // Save FCM token if service worker is available
-        if ('serviceWorker' in navigator) {
-          const registration = await navigator.serviceWorker.ready;
-          // FCM token would be obtained here with Firebase messaging
-          // For now, save a placeholder indicating permission was granted
+        if (currentToken) {
+          console.log('[Push] Firebase Device Token Received:', currentToken);
           try {
-            await savePushToken(user.id, `web_push_${Date.now()}`);
+            await savePushToken(user.id, currentToken);
           } catch (e) {
-            console.log('[Push] Token save skipped (table may not exist yet)');
+            console.error('[Push] Token save error:', e);
           }
+          
+          new Notification('O2Clinic 🏥', {
+            body: lang === 'hi' ? 'नोटिफिकेशन चालू! ऑर्डर अपडेट मिलेंगे।' : 'Notifications enabled! You\'ll get order updates.',
+            icon: '/favicon.svg',
+          });
         }
       }
     } catch (err) {
-      console.error('[Push] Error:', err);
+      console.error('[Push] FCM Error:', err);
     }
     setShow(false);
   }
