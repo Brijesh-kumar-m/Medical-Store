@@ -21,6 +21,12 @@ export default function PushNotificationBanner() {
     const perm = Notification.permission;
     setPermission(perm);
 
+    // If already granted, fetch token silently in background
+    if (perm === 'granted') {
+      setTimeout(() => fetchAndSaveFirebaseToken(user.id), 3000);
+      return;
+    }
+
     // Show banner only if not yet decided and not dismissed recently
     if (perm === 'default' && !dismissed) {
       const timer = setTimeout(() => setShow(true), 5000); // Show after 5s
@@ -34,41 +40,40 @@ export default function PushNotificationBanner() {
       setPermission(result);
 
       if (result === 'granted') {
-        if (!('serviceWorker' in navigator)) {
-          console.warn('[Push] Service worker not supported.');
-          setShow(false);
-          return;
-        }
-
-        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        await fetchAndSaveFirebaseToken(user.id);
         
-        // Ensure Firebase is initialized
-        const app = getApps().length === 0 ? initializeApp(config.firebase) : getApp();
-        const messaging = getMessaging(app);
-
-        const currentToken = await getToken(messaging, {
-          vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
-          serviceWorkerRegistration: registration,
+        new Notification('O2Clinic 🏥', {
+          body: lang === 'hi' ? 'नोटिफिकेशन चालू! ऑर्डर अपडेट मिलेंगे।' : 'Notifications enabled! You\'ll get order updates.',
+          icon: '/favicon.svg',
         });
-
-        if (currentToken) {
-          console.log('[Push] Firebase Device Token Received:', currentToken);
-          try {
-            await savePushToken(user.id, currentToken);
-          } catch (e) {
-            console.error('[Push] Token save error:', e);
-          }
-          
-          new Notification('O2Clinic 🏥', {
-            body: lang === 'hi' ? 'नोटिफिकेशन चालू! ऑर्डर अपडेट मिलेंगे।' : 'Notifications enabled! You\'ll get order updates.',
-            icon: '/favicon.svg',
-          });
-        }
       }
     } catch (err) {
       console.error('[Push] FCM Error:', err);
     }
     setShow(false);
+  }
+
+  async function fetchAndSaveFirebaseToken(userId) {
+    try {
+      if (!('serviceWorker' in navigator)) return;
+
+      const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      
+      const app = getApps().length === 0 ? initializeApp(config.firebase) : getApp();
+      const messaging = getMessaging(app);
+
+      const currentToken = await getToken(messaging, {
+        vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+        serviceWorkerRegistration: registration,
+      });
+
+      if (currentToken) {
+        console.log('[Push] Firebase Device Token Received:', currentToken);
+        await savePushToken(userId, currentToken);
+      }
+    } catch (e) {
+      console.error('[Push] Error fetching or saving token:', e);
+    }
   }
 
   function handleDismiss() {
