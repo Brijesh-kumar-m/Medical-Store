@@ -18,16 +18,18 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // 2. Fetch the admin user's push token (assuming the admin has role='admin' or getting all tokens)
-    // For simplicity, we just fetch all users who have a push_token. In a real app, filter where role = 'admin'.
     const { data: users, error } = await supabase
       .from('users')
-      .select('push_token')
+      .select('push_token, mobile, role')
       .not('push_token', 'is', null);
 
-    if (error || !users || users.length === 0) {
-      console.log('No push tokens found');
-      return new Response('No tokens found', { status: 200 });
+    // Filter strictly for admins (using the admin number from your .env or role)
+    const adminMobiles = ['9936468547', '9569146725']; // Add other admin numbers here if needed
+    const adminUsers = users?.filter(u => adminMobiles.includes(u.mobile) || u.role === 'admin') || [];
+
+    if (error || adminUsers.length === 0) {
+      console.log('No admin push tokens found');
+      return new Response('No admin tokens found', { status: 200 });
     }
 
     // 3. Authenticate with Firebase HTTP v1 API
@@ -47,7 +49,7 @@ serve(async (req) => {
     const accessToken = tokens.token;
 
     // 4. Send Message to all tokens
-    const pushPromises = users.map(user => {
+    const pushPromises = adminUsers.map(user => {
       // Safely handle order ID (whether it's integer or UUID)
       const safeOrderId = String(orderData.id).slice(0, 8).toUpperCase();
       const amount = orderData.total_price || orderData.total_amount || 0;
