@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { uploadFile, uploadPrescription } from '../services/index.js';
 import { showToast } from '../components/ui/Toast';
 import { FileImage, Camera, Upload, CheckCircle, X, Image } from 'lucide-react';
+import { compressImage } from '../components/ui/OptimizedImage';
 
 export default function Prescriptions() {
   const { t, lang } = useLanguage();
@@ -18,12 +19,19 @@ export default function Prescriptions() {
   const [uploading, setUploading] = useState(false);
   const [done, setDone] = useState(false);
 
-  function handleFile(e) {
+  async function handleFile(e) {
     const f = e.target.files[0];
     if (!f) return;
     if (preview) URL.revokeObjectURL(preview);
-    setFile(f);
-    setPreview(URL.createObjectURL(f));
+    try {
+      const compressed = await compressImage(f);
+      setFile(compressed);
+      setPreview(URL.createObjectURL(compressed));
+    } catch (err) {
+      console.error('Image compression failed, using original file', err);
+      setFile(f);
+      setPreview(URL.createObjectURL(f));
+    }
   }
 
   function clearFile() {

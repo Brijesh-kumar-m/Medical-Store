@@ -2,34 +2,40 @@
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const mockProducts = [
-  { id: '1', name: 'Paracetamol 500mg', name_hi: 'पैरासिटामोल 500mg', price: 25, image: '', category: 'fever_cold', requires_prescription: false, in_stock: true },
-  { id: '2', name: 'Crocin Advance', name_hi: 'क्रोसिन एडवांस', price: 30, image: '', category: 'fever_cold', requires_prescription: false, in_stock: true },
-  { id: '3', name: 'Dolo 650', name_hi: 'डोलो 650', price: 32, image: '', category: 'fever_cold', requires_prescription: false, in_stock: true },
-  { id: '4', name: 'Combiflam Tablet', name_hi: 'कॉम्बिफ्लेम टैबलेट', price: 35, image: '', category: 'pain_relief', requires_prescription: false, in_stock: true },
-  { id: '5', name: 'Ibuprofen 400mg', name_hi: 'इबुप्रोफेन 400mg', price: 28, image: '', category: 'pain_relief', requires_prescription: false, in_stock: true },
-  { id: '6', name: 'Vicks VapoRub', name_hi: 'विक्स वेपोरब', price: 75, image: '', category: 'fever_cold', requires_prescription: false, in_stock: true },
-  { id: '7', name: 'ORS Sachet', name_hi: 'ORS सैशे', price: 12, image: '', category: 'general', requires_prescription: false, in_stock: true },
-  { id: '8', name: 'Cetirizine 10mg', name_hi: 'सिट्रिजीन 10mg', price: 18, image: '', category: 'general', requires_prescription: false, in_stock: true },
-  { id: '9', name: 'Vitamin C Tablets', name_hi: 'विटामिन C टैबलेट', price: 120, image: '', category: 'vitamins', requires_prescription: false, in_stock: true },
-  { id: '10', name: 'Multivitamin Capsules', name_hi: 'मल्टीविटामिन कैप्सूल', price: 180, image: '', category: 'vitamins', requires_prescription: false, in_stock: true },
-  { id: '11', name: 'Calcium + D3 Tablets', name_hi: 'कैल्शियम + D3 टैबलेट', price: 150, image: '', category: 'vitamins', requires_prescription: false, in_stock: true },
-  { id: '12', name: 'Dettol Antiseptic', name_hi: 'डेटॉल एंटीसेप्टिक', price: 65, image: '', category: 'first_aid', requires_prescription: false, in_stock: true },
-  { id: '13', name: 'Band-Aid Strips (10)', name_hi: 'बैंड-एड स्ट्रिप्स (10)', price: 40, image: '', category: 'first_aid', requires_prescription: false, in_stock: true },
-  { id: '14', name: 'Cotton Roll', name_hi: 'कॉटन रोल', price: 30, image: '', category: 'first_aid', requires_prescription: false, in_stock: true },
-  { id: '15', name: 'Burnol Cream', name_hi: 'बर्नोल क्रीम', price: 55, image: '', category: 'first_aid', requires_prescription: false, in_stock: true },
-  { id: '16', name: 'Metformin 500mg', name_hi: 'मेटफॉर्मिन 500mg', price: 45, image: '', category: 'diabetes', requires_prescription: true, in_stock: true },
+  { id: '1', name: 'Paracetamol 500mg', name_hi: 'पैरासिटामोल 500mg', price: 25, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=200&h=200&q=80', category: 'fever_cold', requires_prescription: false, in_stock: true },
+  { id: '2', name: 'Crocin Advance', name_hi: 'क्रोसिन एडवांस', price: 30, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=200&h=200&q=80', category: 'fever_cold', requires_prescription: false, in_stock: true },
+  { id: '3', name: 'Dolo 650', name_hi: 'डोलो 650', price: 32, image: 'https://images.unsplash.com/photo-1607619275048-24722480f876?auto=format&fit=crop&w=200&h=200&q=80', category: 'fever_cold', requires_prescription: false, in_stock: true },
+  { id: '4', name: 'Combiflam Tablet', name_hi: 'कॉम्बिफ्लेम टैबलेट', price: 35, image: 'https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=200&h=200&q=80', category: 'pain_relief', requires_prescription: false, in_stock: true },
+  { id: '5', name: 'Ibuprofen 400mg', name_hi: 'इबुप्रोफेन 400mg', price: 28, image: 'https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=200&h=200&q=80', category: 'pain_relief', requires_prescription: false, in_stock: true },
+  { id: '6', name: 'Vicks VapoRub', name_hi: 'विक्स वेपोरब', price: 75, image: 'https://images.unsplash.com/photo-1555364376-7910cf94e9f7?auto=format&fit=crop&w=200&h=200&q=80', category: 'fever_cold', requires_prescription: false, in_stock: true },
+  { id: '7', name: 'ORS Sachet', name_hi: 'ORS सैशे', price: 12, image: 'https://images.unsplash.com/photo-1547489432-cf93fa6c71ee?auto=format&fit=crop&w=200&h=200&q=80', category: 'general', requires_prescription: false, in_stock: true },
+  { id: '8', name: 'Cetirizine 10mg', name_hi: 'सिट्रिजीन 10mg', price: 18, image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbbc88?auto=format&fit=crop&w=200&h=200&q=80', category: 'general', requires_prescription: false, in_stock: true },
+  { id: '9', name: 'Vitamin C Tablets', name_hi: 'विटामिन C टैबलेट', price: 120, image: 'https://images.unsplash.com/photo-1616679911721-eff6eec18fcd?auto=format&fit=crop&w=200&h=200&q=80', category: 'vitamins', requires_prescription: false, in_stock: true },
+  { id: '10', name: 'Multivitamin Capsules', name_hi: 'मल्टीविटामिन कैप्सूल', price: 180, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=200&h=200&q=80', category: 'vitamins', requires_prescription: false, in_stock: true },
+  { id: '11', name: 'Calcium + D3 Tablets', name_hi: 'कैल्शियम + D3 टैबलेट', price: 150, image: 'https://images.unsplash.com/photo-1550572017-ed3c2cbe0df0?auto=format&fit=crop&w=200&h=200&q=80', category: 'vitamins', requires_prescription: false, in_stock: true },
+  { id: '12', name: 'Dettol Antiseptic', name_hi: 'डेटॉल एंटीसेप्टिक', price: 65, image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=200&h=200&q=80', category: 'first_aid', requires_prescription: false, in_stock: true },
+  { id: '13', name: 'Band-Aid Strips (10)', name_hi: 'बैंड-एड स्ट्रिप्स (10)', price: 40, image: 'https://images.unsplash.com/photo-1603398938378-e54eab446dde?auto=format&fit=crop&w=200&h=200&q=80', category: 'first_aid', requires_prescription: false, in_stock: true },
+  { id: '14', name: 'Cotton Roll', name_hi: 'कॉटन रोल', price: 30, image: 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=200&h=200&q=80', category: 'first_aid', requires_prescription: false, in_stock: true },
+  { id: '15', name: 'Burnol Cream', name_hi: 'बर्नोल क्रीम', price: 55, image: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=200&h=200&q=80', category: 'first_aid', requires_prescription: false, in_stock: true },
+  { id: '16', name: 'Metformin 500mg', name_hi: 'मेटफॉर्मिन 500mg', price: 45, image: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=200&h=200&q=80', category: 'diabetes', requires_prescription: true, in_stock: true },
 ];
 
 const bloodTests = [
-  { id: 'cbc', name: 'Complete Blood Count (CBC)', name_hi: 'कम्पलीट ब्लड काउंट (CBC)', price: 350 },
-  { id: 'sugar', name: 'Blood Sugar (Fasting)', name_hi: 'ब्लड शुगर (फास्टिंग)', price: 150 },
-  { id: 'thyroid', name: 'Thyroid Profile', name_hi: 'थायरॉइड प्रोफाइल', price: 600 },
-  { id: 'lipid', name: 'Lipid Profile', name_hi: 'लिपिड प्रोफाइल', price: 500 },
-  { id: 'liver', name: 'Liver Function Test', name_hi: 'लिवर फंक्शन टेस्ट', price: 550 },
-  { id: 'kidney', name: 'Kidney Function Test', name_hi: 'किडनी फंक्शन टेस्ट', price: 500 },
-  { id: 'urine', name: 'Urine Routine', name_hi: 'यूरिन रूटीन', price: 200 },
-  { id: 'vitamin_d', name: 'Vitamin D', name_hi: 'विटामिन D', price: 800 },
-  { id: 'hba1c', name: 'HbA1c', name_hi: 'HbA1c', price: 450 },
+  { id: 'cbc', name: 'Complete Blood Count (CBC)', name_hi: 'कम्पलीट ब्लड काउंट (CBC)', price: 350, mrp: 500, offer: '30% off' },
+  { id: 'sugar', name: 'Blood Sugar (Fasting)', name_hi: 'ब्लड शुगर (फास्टिंग)', price: 150, mrp: 200, offer: '25% off' },
+  { id: 'thyroid', name: 'Thyroid Profile', name_hi: 'थायरॉइड प्रोफाइल', price: 600, mrp: 800, offer: '25% off' },
+  { id: 'lipid', name: 'Lipid Profile', name_hi: 'लिपिड प्रोफाइल', price: 500, mrp: 700, offer: '28% off' },
+  { id: 'liver', name: 'Liver Function Test', name_hi: 'लिवर फंक्शन टेस्ट', price: 550, mrp: 800, offer: '31% off' },
+  { id: 'kidney', name: 'Kidney Function Test', name_hi: 'किडनी फंक्शन टेस्ट', price: 500, mrp: 750, offer: '33% off' },
+  { id: 'urine', name: 'Urine Routine', name_hi: 'यूरिन रूटीन', price: 200, mrp: 300, offer: '33% off' },
+  { id: 'vitamin_d', name: 'Vitamin D', name_hi: 'विटामिन D', price: 800, mrp: 1200, offer: '33% off' },
+  { id: 'hba1c', name: 'HbA1c', name_hi: 'HbA1c', price: 450, mrp: 600, offer: '25% off' },
+  { id: 'diabetes_screen', name: 'Diabetes Screen (Fasting Sugar + HbA1c)', name_hi: 'डायबिटीज स्क्रीन', price: 500, mrp: 650, offer: '23% off' },
+  { id: 'full_body', name: 'Full Body Health Checkup', name_hi: 'फुल बॉडी हेल्थ चेकअप', price: 1200, mrp: 2000, offer: '40% off' },
+  { id: 'vitamin_b12', name: 'Vitamin B12 Test', name_hi: 'विटामिन B12 टेस्ट', price: 700, mrp: 900, offer: '22% off' },
+  { id: 'hemoglobin', name: 'Hemoglobin (Hb) Test', name_hi: 'हीमोग्लोबिन टेस्ट', price: 100, mrp: 150, offer: '33% off' },
+  { id: 'dengue_malaria', name: 'Malaria & Dengue Screen', name_hi: 'मलेरिया और डेंगू स्क्रीन', price: 400, mrp: 600, offer: '33% off' },
+  { id: 'double_marker', name: 'Double Marker Test', name_hi: 'डबल मार्कर टेस्ट', price: 1500, mrp: 1800, offer: '16% off' },
 ];
 
 // In-memory stores for mock
@@ -37,8 +43,48 @@ let users = JSON.parse(localStorage.getItem('o2_mock_users') || '[]');
 let orders = JSON.parse(localStorage.getItem('o2_mock_orders') || '[]');
 let bloodTestBookings = JSON.parse(localStorage.getItem('o2_mock_blood_tests') || '[]');
 let prescriptions = JSON.parse(localStorage.getItem('o2_mock_prescriptions') || '[]');
-let products = JSON.parse(localStorage.getItem('o2_mock_products') || 'null') || [...mockProducts];
-let bloodTestsAdmin = JSON.parse(localStorage.getItem('o2_mock_blood_test_types') || 'null') || [...bloodTests];
+let products = (() => {
+  const stored = JSON.parse(localStorage.getItem('o2_mock_products') || 'null');
+  if (!stored) return [...mockProducts];
+  // Auto-migration: if any product has no image (empty string), migrate it to have the new default image
+  let migrated = false;
+  const updated = stored.map(p => {
+    const defaultProd = mockProducts.find(d => d.id === p.id);
+    if (defaultProd && !p.image) {
+      migrated = true;
+      return { ...p, image: defaultProd.image };
+    }
+    return p;
+  });
+  if (migrated) {
+    localStorage.setItem('o2_mock_products', JSON.stringify(updated));
+  }
+  return updated;
+})();
+let bloodTestsAdmin = (() => {
+  const stored = JSON.parse(localStorage.getItem('o2_mock_blood_test_types') || 'null');
+  if (!stored) return [...bloodTests];
+  // Auto-migration: if any default test is missing or lacks mrp/offer, merge/update it
+  let migrated = false;
+  const updated = [...stored];
+  bloodTests.forEach(t => {
+    const existingIdx = updated.findIndex(u => u.id === t.id);
+    if (existingIdx === -1) {
+      updated.push(t);
+      migrated = true;
+    } else {
+      const existing = updated[existingIdx];
+      if (existing.mrp !== t.mrp || existing.offer !== t.offer) {
+        updated[existingIdx] = { ...existing, mrp: t.mrp, offer: t.offer };
+        migrated = true;
+      }
+    }
+  });
+  if (migrated) {
+    localStorage.setItem('o2_mock_blood_test_types', JSON.stringify(updated));
+  }
+  return updated;
+})();
 let settings = JSON.parse(localStorage.getItem('o2_mock_settings') || '{"delivery_charge": 50}');
 
 function persist() {

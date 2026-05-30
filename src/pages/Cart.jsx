@@ -7,6 +7,7 @@ import { createOrder, getSettings } from '../services/index.js';
 import { openWhatsApp, generateOrderMessage } from '../utils/whatsapp';
 import { showToast } from '../components/ui/Toast';
 import { Minus, Plus, Trash2, ShoppingBag, MapPin, MessageCircle, ArrowLeft, CheckCircle } from 'lucide-react';
+import OptimizedImage from '../components/ui/OptimizedImage';
 
 export default function Cart() {
   const { t, lang } = useLanguage();
@@ -127,8 +128,17 @@ export default function Cart() {
           const name = lang === 'hi' && item.name_hi ? item.name_hi : item.name;
           return (
             <div key={item.id} className="card flex items-center gap-3" id={`cart-item-${item.id}`}>
-              <div className="w-14 h-14 rounded-xl bg-surface-700 flex items-center justify-center shrink-0">
-                <ShoppingBag size={20} className="text-brand-400" />
+              <div className="w-14 h-14 rounded-xl overflow-hidden bg-surface-700 flex items-center justify-center shrink-0">
+                {item.image ? (
+                  <OptimizedImage
+                    src={item.image}
+                    alt={name}
+                    className="w-full h-full object-cover"
+                    fallbackIcon={<ShoppingBag size={20} className="text-brand-400" />}
+                  />
+                ) : (
+                  <ShoppingBag size={20} className="text-brand-400" />
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <h4 className="font-semibold text-sm truncate">{name}</h4>

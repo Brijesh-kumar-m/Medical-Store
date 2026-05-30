@@ -4,6 +4,7 @@ import { getProducts, addProduct, updateProduct, deleteProduct, uploadFile } fro
 import { SkeletonCard } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
 import { Plus, Edit3, Trash2, X, Save, Package } from 'lucide-react';
+import OptimizedImage, { compressImage } from '../../components/ui/OptimizedImage';
 
 const categories = ['fever_cold', 'pain_relief', 'vitamins', 'diabetes', 'first_aid', 'general'];
 
@@ -88,8 +89,17 @@ export default function AdminProducts() {
       <div className="space-y-3">
         {products.map((p) => (
           <div key={p.id} className="card flex items-center gap-4" id={`admin-product-${p.id}`}>
-            <div className="w-12 h-12 rounded-xl bg-surface-700 flex items-center justify-center shrink-0">
-              <Package size={20} className="text-brand-400" />
+            <div className="w-12 h-12 rounded-xl overflow-hidden bg-surface-700 flex items-center justify-center shrink-0">
+              {p.image ? (
+                <OptimizedImage
+                  src={p.image}
+                  alt={p.name}
+                  className="w-full h-full object-cover"
+                  fallbackIcon={<Package size={20} className="text-brand-400" />}
+                />
+              ) : (
+                <Package size={20} className="text-brand-400" />
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <h4 className="font-semibold text-sm truncate">{p.name}</h4>
@@ -154,8 +164,15 @@ export default function AdminProducts() {
                   <input type="file" accept="image/*" onChange={async (e) => {
                     const file = e.target.files[0];
                     if (file) {
-                      const url = await uploadFile(file, 'products');
-                      setForm({ ...form, image: url });
+                      try {
+                        const compressed = await compressImage(file);
+                        const url = await uploadFile(compressed, 'products');
+                        setForm({ ...form, image: url });
+                      } catch (err) {
+                        console.error('Image compression failed, uploading original', err);
+                        const url = await uploadFile(file, 'products');
+                        setForm({ ...form, image: url });
+                      }
                     }
                   }} className="w-full text-sm text-surface-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-surface-700 file:text-white hover:file:bg-surface-600" />
                   {form.image && (
