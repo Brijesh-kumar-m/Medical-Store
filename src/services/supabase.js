@@ -14,7 +14,7 @@ const supabaseService = {
 
     if (existing) {
       await supabase.from('users').update({ name }).eq('id', existing.id);
-      return { ...existing, name };
+      return { ...existing, name, isNew: false };
     }
 
     const { data: newUser, error } = await supabase
@@ -24,7 +24,7 @@ const supabaseService = {
       .single();
 
     if (error) throw error;
-    return newUser;
+    return { ...newUser, isNew: true };
   },
 
   async getUser(id) {
@@ -79,6 +79,21 @@ const supabaseService = {
       .select()
       .single();
     if (error) throw error;
+
+    // Check referral reward attribution
+    try {
+      if (orderData.mobile) {
+        await this.checkAndRewardReferral(orderData.mobile, orderData.total_price);
+      } else {
+        const user = await this.getUser(orderData.user_id);
+        if (user && user.mobile) {
+          await this.checkAndRewardReferral(user.mobile, orderData.total_price);
+        }
+      }
+    } catch (refErr) {
+      console.error('Failed to reward referral:', refErr);
+    }
+
     return data;
   },
 
@@ -201,10 +216,11 @@ const supabaseService = {
   },
   // Referrals
   async getReferralStats(userId) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('referrals')
       .select('*')
       .eq('referrer_id', userId);
+    if (error) throw error;
     const referrals = data || [];
     return {
       total: referrals.length,
@@ -223,11 +239,71 @@ const supabaseService = {
     return data;
   },
 
-  async applyReferralCode(code, userId) {
-    // Find referrer by code pattern O2-XXXXXX
-    const { data: users } = await supabase.from('users').select('id, name').limit(100);
-    // Code is generated from user id, so we check if valid
-    return { success: true, message: 'Referral applied' };
+  async applyReferralCode(code, inviteeMobile) {
+    if (!code || !code.startsWith('O2-')) return { success: false, error: 'Invalid code format' };
+    const suffix = code.substring(3).toLowerCase();
+
+    // Find referrer whose ID ends with the suffix
+    const { data: users, error } = await supabase
+      .from('users')
+      .select('id, mobile');
+
+    if (error) throw error;
+
+    const referrer = users.find(u => u.id.slice(-6).toLowerCase() === suffix);
+    if (!referrer) {
+      return { success: false, error: 'Referrer not found' };
+    }
+
+    if (referrer.mobile === inviteeMobile) {
+      return { success: false, error: 'Cannot refer yourself' };
+    }
+
+    // Check if a referral entry already exists for this invitee
+    const { data: existingRef } = await supabase
+      .from('referrals')
+      .select('*')
+      .eq('invitee_mobile', inviteeMobile)
+      .maybeSingle();
+
+    if (existingRef) {
+      return { success: false, error: 'Referral already registered for this mobile' };
+    }
+
+    // Create referral
+    const { data: referral, error: refError } = await supabase
+      .from('referrals')
+      .insert({
+        referrer_id: referrer.id,
+        invitee_mobile: inviteeMobile,
+        rewarded: false,
+        reward_amount: 50
+      })
+      .select()
+      .single();
+
+    if (refError) throw refError;
+    return { success: true, referral };
+  },
+
+  async checkAndRewardReferral(inviteeMobile, orderTotal) {
+    if (orderTotal < 100) return;
+
+    // Find unrewarded referral for this mobile
+    const { data: referral, error } = await supabase
+      .from('referrals')
+      .select('*')
+      .eq('invitee_mobile', inviteeMobile)
+      .eq('rewarded', false)
+      .maybeSingle();
+
+    if (error || !referral) return;
+
+    // Update to rewarded
+    await supabase
+      .from('referrals')
+      .update({ rewarded: true })
+      .eq('id', referral.id);
   },
 
   // Push Notification Token

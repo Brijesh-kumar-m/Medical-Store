@@ -4,7 +4,7 @@ import BottomNav from './BottomNav';
 
 export default function Layout() {
   return (
-    <div className="min-h-screen bg-surface-950 flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
         <Outlet />

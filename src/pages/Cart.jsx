@@ -90,8 +90,8 @@ export default function Cart() {
           <CheckCircle size={72} className="text-green-400" />
         </div>
         <h2 className="text-2xl font-extrabold mb-2">{t('order_placed')}</h2>
-        <p className="text-surface-400 mb-1">{t('order_id')}: <span className="text-brand-400 font-mono">{orderDone.id}</span></p>
-        <p className="text-surface-400 mb-6">{t('total')}: <span className="text-white font-bold">₹{orderDone.total_price}</span></p>
+        <p className="text-slate-500 dark:text-surface-400 mb-1">{t('order_id')}: <span className="text-brand-400 font-mono">{orderDone.id}</span></p>
+        <p className="text-slate-500 dark:text-surface-400 mb-6">{t('total')}: <span className="text-slate-900 dark:text-white font-bold">₹{orderDone.total_price}</span></p>
         <div className="flex gap-3">
           <Link to="/orders" className="btn-primary">{t('track_order')}</Link>
           <Link to="/products" className="btn-secondary">{t('medicines')}</Link>
@@ -104,9 +104,9 @@ export default function Cart() {
   if (items.length === 0) {
     return (
       <div className="page-container flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <ShoppingBag size={64} className="text-surface-600 mb-4" />
+        <ShoppingBag size={64} className="text-slate-400 dark:text-surface-600 mb-4" />
         <h2 className="text-xl font-bold mb-2">{t('empty_cart')}</h2>
-        <p className="text-surface-400 text-sm mb-6">
+        <p className="text-slate-500 dark:text-surface-400 text-sm mb-6">
           {lang === 'hi' ? 'दवाइयाँ ब्राउज़ करने के लिए नीचे क्लिक करें' : 'Click below to browse medicines'}
         </p>
         <Link to="/products" className="btn-primary flex items-center gap-2">
@@ -128,7 +128,7 @@ export default function Cart() {
           const name = lang === 'hi' && item.name_hi ? item.name_hi : item.name;
           return (
             <div key={item.id} className="card flex items-center gap-3" id={`cart-item-${item.id}`}>
-              <div className="w-14 h-14 rounded-xl overflow-hidden bg-surface-700 flex items-center justify-center shrink-0">
+              <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-100 dark:bg-surface-700 flex items-center justify-center shrink-0">
                 {item.image ? (
                   <OptimizedImage
                     src={item.image}
@@ -147,14 +147,14 @@ export default function Cart() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => updateQty(item.id, item.qty - 1)}
-                  className="w-8 h-8 rounded-lg bg-surface-700 flex items-center justify-center hover:bg-surface-600 transition-colors"
+                  className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-surface-700 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-surface-600 text-slate-800 dark:text-white transition-colors"
                 >
                   <Minus size={14} />
                 </button>
                 <span className="w-8 text-center font-bold">{item.qty}</span>
                 <button
                   onClick={() => updateQty(item.id, item.qty + 1)}
-                  className="w-8 h-8 rounded-lg bg-surface-700 flex items-center justify-center hover:bg-surface-600 transition-colors"
+                  className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-surface-700 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-surface-600 text-slate-800 dark:text-white transition-colors"
                 >
                   <Plus size={14} />
                 </button>
@@ -189,16 +189,16 @@ export default function Cart() {
       {/* Total & Actions */}
       <div className="card bg-gradient-to-r from-brand-500/10 to-brand-600/10 border-brand-500/20 mb-4">
         <div className="space-y-2 mb-4">
-          <div className="flex items-center justify-between text-surface-400 text-sm">
+          <div className="flex items-center justify-between text-slate-500 dark:text-surface-400 text-sm">
             <span>{lang === 'hi' ? 'दवाइयों का मूल्य' : 'Subtotal'}</span>
             <span>₹{totalPrice}</span>
           </div>
-          <div className="flex items-center justify-between text-surface-400 text-sm">
+          <div className="flex items-center justify-between text-slate-500 dark:text-surface-400 text-sm">
             <span>{lang === 'hi' ? 'डिलीवरी चार्ज' : 'Delivery Charge'}</span>
             <span>₹{deliveryCharge}</span>
           </div>
           <div className="flex items-center justify-between pt-2 border-t border-brand-500/20">
-            <span className="text-surface-100 font-bold">{t('total')}</span>
+            <span className="text-slate-800 dark:text-surface-100 font-bold">{t('total')}</span>
             <span className="text-2xl font-extrabold gradient-text">₹{finalTotal}</span>
           </div>
         </div>

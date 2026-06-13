@@ -49,7 +49,7 @@ export default function ToastContainer() {
           <p className="text-sm font-medium flex-1">{toast.message}</p>
           <button
             onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
-            className="text-surface-500 hover:text-white transition-colors shrink-0"
+            className="text-surface-500 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white transition-colors shrink-0"
           >
             <X size={16} />
           </button>

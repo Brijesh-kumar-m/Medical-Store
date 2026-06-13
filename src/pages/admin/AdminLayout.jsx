@@ -30,24 +30,24 @@ export default function AdminLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-surface-950 flex">
+    <div className="min-h-screen flex">
       {/* Sidebar Overlay */}
       {sidebarOpen && (
         <div className="overlay lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 w-64 glass border-r border-surface-700/50 z-50 transform transition-transform duration-300 ${
+      <aside className={`fixed lg:static inset-y-0 left-0 w-64 glass border-r border-slate-200/50 dark:border-surface-700/50 z-50 transform transition-transform duration-300 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
-        <div className="p-4 border-b border-surface-700/50">
+        <div className="p-4 border-b border-slate-200/50 dark:border-surface-700/50">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
               <Shield size={20} className="text-white" />
             </div>
             <div>
               <h2 className="font-bold text-sm gradient-text">{t('admin')}</h2>
-              <p className="text-xs text-surface-500">{user?.name}</p>
+              <p className="text-xs text-slate-500 dark:text-surface-500">{user?.name}</p>
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@ export default function AdminLayout() {
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                   isActive
                     ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20'
-                    : 'text-surface-400 hover:text-white hover:bg-surface-800'
+                    : 'text-slate-600 dark:text-surface-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-800'
                 }`}
               >
                 <link.icon size={18} />
@@ -89,8 +89,8 @@ export default function AdminLayout() {
       {/* Main content */}
       <div className="flex-1 min-w-0">
         {/* Top header bar with notification bell */}
-        <div className="sticky top-0 z-30 glass border-b border-surface-700/50 px-4 py-3 flex items-center gap-3">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-xl bg-surface-800 border border-surface-600">
+        <div className="sticky top-0 z-30 glass border-b border-slate-200/50 dark:border-surface-700/50 px-4 py-3 flex items-center gap-3">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-surface-800 border border-slate-200 dark:border-surface-600 text-slate-700 dark:text-white">
             <Menu size={20} />
           </button>
           <h2 className="font-bold gradient-text flex-1">{t('admin')}</h2>

@@ -79,7 +79,7 @@ export default function Products() {
             className={`shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
               category === cat.id
                 ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30'
-                : 'bg-surface-800 text-surface-400 border border-surface-600 hover:border-brand-500/50'
+                : 'bg-slate-100 dark:bg-surface-800 text-slate-600 dark:text-surface-400 border border-slate-200 dark:border-surface-600 hover:border-brand-500/50 hover:bg-slate-200 dark:hover:bg-surface-700'
             }`}
             id={`cat-${cat.id}`}
           >
@@ -93,8 +93,8 @@ export default function Products() {
         <SkeletonProductGrid count={6} />
       ) : filtered.length === 0 ? (
         <div className="card text-center py-12">
-          <Filter size={40} className="text-surface-600 mx-auto mb-3" />
-          <p className="text-surface-400">{t('no_items')}</p>
+          <Filter size={40} className="text-slate-400 dark:text-surface-600 mx-auto mb-3" />
+          <p className="text-slate-500 dark:text-surface-400">{t('no_items')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">

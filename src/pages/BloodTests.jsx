@@ -89,12 +89,12 @@ export default function BloodTests() {
           <CheckCircle size={72} className="text-green-400" />
         </div>
         <h2 className="text-2xl font-extrabold mb-2">{t('booking_confirmed')}</h2>
-        <p className="text-surface-400 mb-4">{selectedTest.name}</p>
+        <p className="text-slate-500 dark:text-surface-400 mb-4">{selectedTest.name}</p>
         <div className="card w-full max-w-sm text-left space-y-2 mb-6">
-          <p className="text-sm"><span className="text-surface-400">{t('date')}:</span> {date}</p>
-          <p className="text-sm"><span className="text-surface-400">{t('time')}:</span> {time}</p>
-          <p className="text-sm"><span className="text-surface-400">{t('address')}:</span> {address}</p>
-          <p className="text-sm"><span className="text-surface-400">{t('price')}:</span> <span className="text-brand-400 font-bold">₹{selectedTest.price}</span></p>
+          <p className="text-sm"><span className="text-slate-500 dark:text-surface-400">{t('date')}:</span> {date}</p>
+          <p className="text-sm"><span className="text-slate-500 dark:text-surface-400">{t('time')}:</span> {time}</p>
+          <p className="text-sm"><span className="text-slate-500 dark:text-surface-400">{t('address')}:</span> {address}</p>
+          <p className="text-sm"><span className="text-slate-500 dark:text-surface-400">{t('price')}:</span> <span className="text-brand-400 font-bold">₹{selectedTest.price}</span></p>
         </div>
         <div className="flex gap-3">
           <button
@@ -127,11 +127,11 @@ export default function BloodTests() {
         {[1, 2].map((s) => (
           <div key={s} className="flex items-center gap-2 flex-1">
             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-              step >= s ? 'bg-brand-500 text-white' : 'bg-surface-700 text-surface-400'
+              step >= s ? 'bg-brand-500 text-white' : 'bg-slate-100 dark:bg-surface-700 text-slate-500 dark:text-surface-400'
             }`}>
               {s}
             </div>
-            {s < 2 && <div className={`flex-1 h-0.5 rounded ${step > s ? 'bg-brand-500' : 'bg-surface-700'}`} />}
+            {s < 2 && <div className={`flex-1 h-0.5 rounded ${step > s ? 'bg-brand-500' : 'bg-slate-200 dark:bg-surface-700'}`} />}
           </div>
         ))}
       </div>
@@ -171,7 +171,7 @@ export default function BloodTests() {
                   <span className="font-bold text-lg leading-none mb-0.5">₹{test.price}</span>
                   {test.mrp && Number(test.mrp) > Number(test.price) && (
                     <div className="flex items-center gap-1.5 opacity-90">
-                      <span className="text-surface-500 text-xs font-medium line-through leading-none mt-0.5">₹{test.mrp}</span>
+                      <span className="text-slate-500 dark:text-surface-500 text-xs font-medium line-through leading-none mt-0.5">₹{test.mrp}</span>
                       <span className="text-[#388e3c] font-bold text-[10px] leading-none mt-0.5 tracking-tight">
                         {Math.round(((Number(test.mrp) - Number(test.price)) / Number(test.mrp)) * 100)}% off
                       </span>
@@ -196,7 +196,7 @@ export default function BloodTests() {
       {/* Step 2: Details */}
       {step === 2 && (
         <div className="animate-fade-in">
-          <button onClick={() => setStep(1)} className="text-surface-400 flex items-center gap-1 mb-4 text-sm hover:text-white transition-colors">
+          <button onClick={() => setStep(1)} className="text-slate-500 dark:text-surface-400 flex items-center gap-1 mb-4 text-sm hover:text-slate-900 dark:hover:text-white transition-colors">
             <ArrowLeft size={16} /> {t('back')}
           </button>
 
@@ -241,7 +241,7 @@ export default function BloodTests() {
                     className={`py-2.5 px-3 rounded-xl text-xs font-medium transition-all ${
                       time === slot
                         ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30'
-                        : 'bg-surface-800 text-surface-400 border border-surface-600 hover:border-brand-500/50'
+                        : 'bg-slate-100 dark:bg-surface-800 text-slate-600 dark:text-surface-400 border border-slate-200 dark:border-surface-600 hover:border-brand-500/50'
                     }`}
                   >
                     {slot}

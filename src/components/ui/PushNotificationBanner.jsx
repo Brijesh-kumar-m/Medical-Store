@@ -90,10 +90,10 @@ export default function PushNotificationBanner() {
           <Bell size={20} className="text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-white text-sm font-semibold leading-tight">
+          <p className="text-slate-900 dark:text-white text-sm font-semibold leading-tight">
             {lang === 'hi' ? '🔔 ऑर्डर अपडेट पाएँ' : '🔔 Get Order Updates'}
           </p>
-          <p className="text-surface-400 text-xs mt-0.5">
+          <p className="text-slate-500 dark:text-surface-400 text-xs mt-0.5">
             {lang === 'hi' ? 'दवाई डिस्पैच और डिलीवरी की सूचना' : 'Medicine dispatch & delivery notifications'}
           </p>
           <div className="flex gap-2 mt-2.5">
@@ -105,13 +105,13 @@ export default function PushNotificationBanner() {
             </button>
             <button
               onClick={handleDismiss}
-              className="px-4 py-1.5 rounded-xl bg-surface-800 text-surface-400 text-xs font-semibold hover:bg-surface-700 transition-all"
+              className="px-4 py-1.5 rounded-xl bg-surface-100 dark:bg-surface-800 text-slate-600 dark:text-surface-400 text-xs font-semibold hover:bg-surface-200 dark:hover:bg-surface-700 transition-all"
             >
               {lang === 'hi' ? 'बाद में' : 'Later'}
             </button>
           </div>
         </div>
-        <button onClick={handleDismiss} className="text-surface-500 hover:text-white transition-colors p-1">
+        <button onClick={handleDismiss} className="text-surface-500 hover:text-slate-900 dark:hover:text-white transition-colors p-1">
           <X size={16} />
         </button>
       </div>

@@ -34,7 +34,7 @@ export function LanguageProvider({ children }) {
   return (
     <LanguageContext.Provider value={{ lang, switchLanguage, t, loading }}>
       {loading ? (
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030812' }}>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)' }}>
           <div style={{ textAlign: 'center' }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #04c8a5, #0d9488)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 0 20px rgba(4,200,165,0.3)' }}>
               <span style={{ color: '#fff', fontWeight: 900, fontSize: 18 }}>O₂</span>

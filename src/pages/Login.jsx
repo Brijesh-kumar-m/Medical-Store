@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Phone, ArrowRight, UserCheck, Eye, Lock, ShieldAlert } from 'lucide-react';
+import { User, Phone, ArrowRight, UserCheck, Eye, Lock, ShieldAlert, Gift } from 'lucide-react';
 import { showToast } from '../components/ui/Toast';
 import { checkRateLimit } from '../utils/rateLimit';
+import { applyReferralCode } from '../services/index.js';
 
 export default function Login() {
   const { t, lang } = useLanguage();
   const { loginSimple, loginAsGuest } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [mode, setMode] = useState('simple'); // 'simple' | 'otp'
   const [name, setName] = useState('');
@@ -18,6 +20,15 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+
+  const refCode = searchParams.get('ref') || sessionStorage.getItem('o2_ref');
+
+  useEffect(() => {
+    const urlRef = searchParams.get('ref');
+    if (urlRef) {
+      sessionStorage.setItem('o2_ref', urlRef);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (cooldown <= 0) { setRateLimited(false); return; }
@@ -58,8 +69,24 @@ export default function Login() {
 
     setLoading(true);
     try {
-      await loginSimple(name, mobile);
+      const userData = await loginSimple(name, mobile);
       showToast(lang === 'hi' ? `स्वागत है, ${name}! 🎉` : `Welcome, ${name}! 🎉`);
+
+      // Apply referral code if user was newly created
+      const isNewUser = userData && userData.isNew;
+      if (isNewUser && refCode) {
+        try {
+          const res = await applyReferralCode(refCode, mobile);
+          if (res && res.success) {
+            showToast(lang === 'hi' ? 'रेफ़रल सफलतापूर्वक लागू किया गया!' : 'Referral applied successfully!');
+          }
+        } catch (refErr) {
+          console.error('Failed to apply referral code:', refErr);
+        } finally {
+          sessionStorage.removeItem('o2_ref');
+        }
+      }
+
       navigate('/');
     } catch (err) {
       showToast(lang === 'hi' ? 'लॉगिन विफल' : 'Login failed', 'error');
@@ -82,17 +109,27 @@ export default function Login() {
             <span className="text-white font-black text-2xl">O₂</span>
           </div>
           <h2 className="text-2xl font-extrabold">{t('login_title')}</h2>
-          <p className="text-surface-400 mt-2">{t('login_subtitle')}</p>
+          <p className="text-slate-500 dark:text-surface-400 mt-2">{t('login_subtitle')}</p>
+          {refCode && (
+            <div className="mt-4 mx-auto max-w-[280px] px-4 py-2 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-brand-400 text-xs flex items-center justify-center gap-2 animate-pulse font-semibold shadow-inner shadow-brand-500/5">
+              <Gift size={14} className="shrink-0" />
+              <span>
+                {lang === 'hi'
+                  ? `रेफ़रल कोड ${refCode} लागू! ✨`
+                  : `Referral code ${refCode} applied! ✨`}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Mode Toggle */}
-        <div className="flex gap-2 mb-6 p-1 bg-surface-800 rounded-2xl">
+        <div className="flex gap-2 mb-6 p-1 bg-slate-100 dark:bg-surface-800 rounded-2xl transition-colors duration-300">
           <button
             onClick={() => setMode('simple')}
             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               mode === 'simple'
                 ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30'
-                : 'text-surface-400 hover:text-white'
+                : 'text-slate-500 dark:text-surface-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             {t('login_simple')}
@@ -102,7 +139,7 @@ export default function Login() {
             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               mode === 'otp'
                 ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30'
-                : 'text-surface-400 hover:text-white'
+                : 'text-slate-500 dark:text-surface-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             {t('login_otp')}
@@ -153,7 +190,7 @@ export default function Login() {
                     value={pin}
                     onChange={(e) => setPin(e.target.value)}
                     placeholder="Enter Secret PIN"
-                    className="w-full !pl-12 !border-brand-500/50 bg-brand-500/10 text-white placeholder:text-brand-500/50"
+                    className="w-full !pl-12 !border-brand-500/50 bg-brand-500/10 text-slate-900 dark:text-white placeholder:text-brand-500/50"
                   />
                 </div>
               </div>
@@ -188,12 +225,12 @@ export default function Login() {
         {mode === 'otp' && (
           <div className="card text-center py-8 animate-fade-in">
             <Phone size={40} className="text-brand-400 mx-auto mb-4" />
-            <p className="text-surface-400 text-sm mb-4">
+            <p className="text-slate-500 dark:text-surface-400 text-sm mb-4">
               {lang === 'hi'
                 ? 'OTP लॉगिन के लिए Firebase या Supabase Auth सेटअप करें।'
                 : 'Configure Firebase or Supabase Auth for OTP login.'}
             </p>
-            <p className="text-surface-500 text-xs">
+            <p className="text-slate-400 dark:text-surface-500 text-xs">
               {lang === 'hi' ? 'अभी "आसान लॉगिन" का उपयोग करें' : 'Use "Quick Login" for now'}
             </p>
           </div>
@@ -203,7 +240,7 @@ export default function Login() {
         <div className="mt-6 text-center">
           <button
             onClick={handleGuest}
-            className="text-surface-400 hover:text-brand-400 transition-colors text-sm font-medium flex items-center gap-2 mx-auto"
+            className="text-slate-500 dark:text-surface-400 hover:text-brand-500 dark:hover:text-brand-400 transition-colors text-sm font-medium flex items-center gap-2 mx-auto"
             id="guest-btn"
           >
             <Eye size={16} />

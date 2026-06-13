@@ -76,7 +76,7 @@ export default function Prescriptions() {
         <h2 className="text-2xl font-extrabold mb-2">
           {lang === 'hi' ? 'प्रिस्क्रिप्शन अपलोड हो गया!' : 'Prescription Uploaded!'}
         </h2>
-        <p className="text-surface-400 mb-6">
+        <p className="text-slate-500 dark:text-surface-400 mb-6">
           {lang === 'hi'
             ? 'हम जल्द ही आपसे संपर्क करेंगे।'
             : 'We will contact you shortly with your medicines.'}
@@ -97,7 +97,7 @@ export default function Prescriptions() {
       <div className="mb-6">
         {preview ? (
           <div className="relative card p-0 overflow-hidden">
-            <img src={preview} alt="Prescription" className="w-full max-h-80 object-contain bg-surface-800 rounded-2xl" />
+            <img src={preview} alt="Prescription" className="w-full max-h-80 object-contain bg-slate-100 dark:bg-surface-800 rounded-2xl transition-colors duration-300" />
             <button
               onClick={clearFile}
               className="absolute top-3 right-3 w-9 h-9 rounded-full bg-red-500/80 backdrop-blur-md border border-white/20 text-white flex items-center justify-center shadow-2xl transition-all hover:bg-red-600 hover:scale-110 active:scale-95 z-10"
@@ -106,9 +106,9 @@ export default function Prescriptions() {
             </button>
           </div>
         ) : (
-          <div className="card border-2 border-dashed border-surface-600 text-center py-16">
-            <Image size={48} className="text-surface-600 mx-auto mb-4" />
-            <p className="text-surface-400 text-sm mb-6">
+          <div className="card border-2 border-dashed border-slate-300 dark:border-surface-600 text-center py-16">
+            <Image size={48} className="text-slate-400 dark:text-surface-600 mx-auto mb-4" />
+            <p className="text-slate-500 dark:text-surface-400 text-sm mb-6">
               {lang === 'hi'
                 ? 'अपने प्रिस्क्रिप्शन की फ़ोटो अपलोड करें'
                 : 'Upload a photo of your prescription'}
@@ -158,7 +158,7 @@ export default function Prescriptions() {
         <h4 className="font-bold text-sm text-blue-400 mb-2">
           {lang === 'hi' ? 'ℹ️ ज़रूरी जानकारी' : 'ℹ️ Important Info'}
         </h4>
-        <ul className="text-surface-400 text-xs space-y-1">
+        <ul className="text-slate-500 dark:text-surface-400 text-xs space-y-1">
           <li>• {lang === 'hi' ? 'साफ़ और पढ़ने योग्य फ़ोटो लें' : 'Take a clear, readable photo'}</li>
           <li>• {lang === 'hi' ? 'डॉक्टर का नाम दिखना चाहिए' : "Doctor's name should be visible"}</li>
           <li>• {lang === 'hi' ? 'हम OTC दवाइयाँ ही भेजते हैं' : 'We only deliver OTC medicines'}</li>

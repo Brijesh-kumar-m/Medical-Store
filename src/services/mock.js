@@ -106,11 +106,12 @@ const mockService = {
       user = { id: 'user_' + Date.now(), name, mobile, role: 'user', created_at: new Date().toISOString() };
       users.push(user);
       persist();
+      return { ...user, isNew: true };
     } else {
       user.name = name;
       persist();
+      return { ...user, isNew: false };
     }
-    return user;
   },
 
   async getUser(id) {
@@ -185,6 +186,31 @@ const mockService = {
     };
     orders.push(order);
     persist();
+
+    // Check referral reward
+    if (order.total_price >= 100) {
+      const userObj = users.find(u => u.id === order.user_id);
+      if (userObj && userObj.mobile) {
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('o2_mock_referrals_')) {
+            try {
+              const stats = JSON.parse(localStorage.getItem(key));
+              const refIdx = stats.referrals.findIndex(r => r.invitee_mobile === userObj.mobile && !r.rewarded);
+              if (refIdx >= 0) {
+                stats.referrals[refIdx].rewarded = true;
+                stats.earned = stats.referrals.filter(r => r.rewarded).reduce((sum, r) => sum + (r.reward_amount || 50), 0);
+                localStorage.setItem(key, JSON.stringify(stats));
+                break;
+              }
+            } catch (e) {
+              console.error('Failed to parse mock referrals:', e);
+            }
+          }
+        }
+      }
+    }
+
     return order;
   },
 
@@ -323,6 +349,42 @@ const mockService = {
     settings = { ...settings, ...data };
     persist();
     return settings;
+  },
+
+  async getReferralStats(userId) {
+    await delay(200);
+    const refKey = `o2_mock_referrals_${userId}`;
+    const stats = JSON.parse(localStorage.getItem(refKey) || '{"total":0,"earned":0,"referrals":[]}');
+    return stats;
+  },
+
+  async applyReferralCode(code, inviteeMobile) {
+    await delay(300);
+    if (!code || !code.startsWith('O2-')) return { success: false, error: 'Invalid code format' };
+    const suffix = code.substring(3).toLowerCase();
+    const referrer = users.find(u => u.id.slice(-6).toLowerCase() === suffix);
+    if (!referrer) return { success: false, error: 'Referrer not found' };
+    if (referrer.mobile === inviteeMobile) return { success: false, error: 'Cannot refer yourself' };
+
+    const refKey = `o2_mock_referrals_${referrer.id}`;
+    const stats = JSON.parse(localStorage.getItem(refKey) || '{"total":0,"earned":0,"referrals":[]}');
+
+    if (stats.referrals.some(r => r.invitee_mobile === inviteeMobile)) {
+      return { success: false, error: 'Already referred' };
+    }
+
+    const newRef = {
+      id: 'ref_' + Date.now(),
+      referrer_id: referrer.id,
+      invitee_mobile: inviteeMobile,
+      rewarded: false,
+      reward_amount: 50,
+      created_at: new Date().toISOString()
+    };
+    stats.referrals.push(newRef);
+    stats.total = stats.referrals.length;
+    localStorage.setItem(refKey, JSON.stringify(stats));
+    return { success: true, referral: newRef };
   },
 };
 

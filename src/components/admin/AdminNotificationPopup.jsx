@@ -90,13 +90,13 @@ function FloatingNotification({ notification, onClose }) {
             <span className={`text-xs font-bold uppercase tracking-wider ${cfg.bg} ${cfg.border} border rounded-full px-2.5 py-0.5`}>
               {notification.labelHi || cfg.label}
             </span>
-            <button onClick={(e) => { e.stopPropagation(); onClose(); }} className="text-surface-500 hover:text-white transition-colors">
+            <button onClick={(e) => { e.stopPropagation(); onClose(); }} className="text-slate-500 hover:text-slate-900 dark:text-surface-500 dark:hover:text-white transition-colors">
               <X size={14} />
             </button>
           </div>
-          <p className="text-sm font-semibold text-white mt-1.5 truncate">{notification.title}</p>
-          <p className="text-xs text-surface-400 mt-0.5 truncate">{notification.subtitle}</p>
-          <div className="flex items-center gap-1.5 mt-2 text-[10px] text-surface-500 font-medium">
+          <p className="text-sm font-semibold text-slate-950 dark:text-white mt-1.5 truncate">{notification.title}</p>
+          <p className="text-xs text-slate-500 dark:text-surface-400 mt-0.5 truncate">{notification.subtitle}</p>
+          <div className="flex items-center gap-1.5 mt-2 text-[10px] text-slate-500 dark:text-surface-500 font-medium">
             <Clock size={10} />
             <span>Just now</span>
           </div>
@@ -116,20 +116,20 @@ function NotificationBell({ count, onClick, soundEnabled, onToggleSound }) {
     <div className="flex items-center gap-1">
       <button
         onClick={onToggleSound}
-        className="p-2 rounded-xl text-surface-500 hover:text-white hover:bg-surface-800 transition-all"
+        className="p-2 rounded-xl text-slate-500 dark:text-surface-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-800 transition-all"
         title={soundEnabled ? 'Mute' : 'Unmute'}
       >
         {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
       </button>
       <button
         onClick={onClick}
-        className="relative p-2.5 rounded-xl bg-surface-800/60 border border-surface-700/50 hover:bg-surface-700 hover:border-surface-600 transition-all group"
+        className="relative p-2.5 rounded-xl bg-slate-100 dark:bg-surface-800/60 border border-slate-200 dark:border-surface-700/50 hover:bg-slate-200 dark:hover:bg-surface-700 hover:border-slate-300 dark:hover:border-surface-600 transition-all group"
         id="admin-notification-bell"
       >
         {count > 0 ? (
           <BellRing size={20} className="text-brand-400 admin-bell-ring" />
         ) : (
-          <Bell size={20} className="text-surface-400 group-hover:text-white transition-colors" />
+          <Bell size={20} className="text-slate-500 dark:text-surface-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors" />
         )}
         {count > 0 && (
           <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gradient-to-br from-red-500 to-rose-600 rounded-full text-[10px] font-black text-white flex items-center justify-center shadow-lg shadow-red-500/40 admin-notif-badge">
@@ -148,9 +148,9 @@ function NotificationDrawer({ notifications, isOpen, onClose, onClear, lang }) {
   return (
     <>
       <div className="fixed inset-0 z-[60]" onClick={onClose} />
-      <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 max-h-[70vh] glass rounded-2xl border border-surface-700/50 shadow-[0_20px_60px_rgba(0,0,0,0.6)] z-[70] overflow-hidden admin-drawer-enter">
+      <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 max-h-[70vh] glass rounded-2xl border border-slate-200/50 dark:border-surface-700/50 shadow-[0_20px_60px_rgba(15,23,42,0.1)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] z-[70] overflow-hidden admin-drawer-enter">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-surface-700/50">
+        <div className="flex items-center justify-between p-4 border-b border-slate-200/50 dark:border-surface-700/50">
           <div className="flex items-center gap-2">
             <Bell size={16} className="text-brand-400" />
             <h3 className="font-bold text-sm">{lang === 'hi' ? 'सूचनाएँ' : 'Notifications'}</h3>
@@ -166,14 +166,14 @@ function NotificationDrawer({ notifications, isOpen, onClose, onClear, lang }) {
                 const testEvent = new CustomEvent('force-test-notification');
                 window.dispatchEvent(testEvent);
               }}
-              className="px-2 py-1 rounded-lg text-[10px] bg-surface-800 text-surface-400 hover:text-white border border-surface-700 font-bold"
+              className="px-2 py-1 rounded-lg text-[10px] bg-slate-100 dark:bg-surface-800 text-slate-500 dark:text-surface-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-surface-700 font-bold"
             >
               TEST
             </button>
             {notifications.length > 0 && (
               <button
                 onClick={onClear}
-                className="p-1.5 rounded-lg text-surface-500 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                className="p-1.5 rounded-lg text-slate-400 dark:text-surface-500 hover:text-red-500 hover:bg-red-500/10 transition-all"
                 title="Clear all"
               >
                 <Trash2 size={14} />
@@ -181,7 +181,7 @@ function NotificationDrawer({ notifications, isOpen, onClose, onClear, lang }) {
             )}
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-surface-500 hover:text-white hover:bg-surface-800 transition-all"
+              className="p-1.5 rounded-lg text-slate-500 dark:text-surface-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-800 transition-all"
             >
               <X size={14} />
             </button>
@@ -192,18 +192,18 @@ function NotificationDrawer({ notifications, isOpen, onClose, onClear, lang }) {
         <div className="overflow-y-auto max-h-[calc(70vh-4rem)] scrollbar-hide">
           {notifications.length === 0 ? (
             <div className="p-8 text-center">
-              <Bell size={32} className="text-surface-700 mx-auto mb-3" />
-              <p className="text-surface-500 text-sm">{lang === 'hi' ? 'कोई सूचना नहीं' : 'No notifications yet'}</p>
+              <Bell size={32} className="text-slate-300 dark:text-surface-700 mx-auto mb-3" />
+              <p className="text-slate-500 dark:text-surface-500 text-sm">{lang === 'hi' ? 'कोई सूचना नहीं' : 'No notifications yet'}</p>
             </div>
           ) : (
-            <div className="divide-y divide-surface-800/50">
+            <div className="divide-y divide-slate-200/50 dark:divide-surface-800/50">
               {notifications.map((notif) => {
                 const cfg = NOTIF_CONFIG[notif.type] || NOTIF_CONFIG.order;
                 const Icon = cfg.icon;
                 return (
                   <div
                     key={notif.id}
-                    className={`p-3.5 hover:bg-surface-800/30 transition-colors cursor-pointer ${notif.unread ? 'bg-brand-500/[0.03]' : ''}`}
+                    className={`p-3.5 hover:bg-slate-100/50 dark:hover:bg-surface-800/30 transition-colors cursor-pointer ${notif.unread ? 'bg-brand-500/[0.03]' : ''}`}
                   >
                     <div className="flex items-start gap-3">
                       <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${cfg.gradient} flex items-center justify-center shrink-0 shadow ${cfg.shadow}`}>
@@ -218,14 +218,14 @@ function NotificationDrawer({ notifications, isOpen, onClose, onClear, lang }) {
                             <span className="w-1.5 h-1.5 rounded-full bg-brand-400 shadow shadow-brand-400/40" />
                           )}
                         </div>
-                        <p className="text-xs font-semibold text-white truncate">{notif.title}</p>
-                        <p className="text-[11px] text-surface-400 truncate">{notif.subtitle}</p>
-                        <p className="text-[10px] text-surface-600 mt-1 flex items-center gap-1">
+                        <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">{notif.title}</p>
+                        <p className="text-[11px] text-slate-500 dark:text-surface-400 truncate">{notif.subtitle}</p>
+                        <p className="text-[10px] text-slate-400 dark:text-surface-600 mt-1 flex items-center gap-1">
                           <Clock size={9} />
                           {notif.timeAgo}
                         </p>
                       </div>
-                      <ChevronRight size={14} className="text-surface-600 shrink-0 mt-2" />
+                      <ChevronRight size={14} className="text-slate-400 dark:text-surface-600 shrink-0 mt-2" />
                     </div>
                   </div>
                 );

@@ -71,7 +71,7 @@ export default function Dashboard() {
             <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center shadow-lg ${card.shadow} mb-3`}>
               <card.icon size={22} className="text-white" />
             </div>
-            <p className="text-surface-400 text-xs font-medium mb-1">{card.label}</p>
+            <p className="text-slate-500 dark:text-surface-400 text-xs font-medium mb-1">{card.label}</p>
             <p className="text-2xl font-extrabold">{card.value}</p>
           </div>
         ))}

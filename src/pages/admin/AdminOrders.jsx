@@ -48,16 +48,16 @@ export default function AdminOrders() {
 
       {orders.length === 0 ? (
         <div className="card text-center py-12">
-          <Package size={40} className="text-surface-600 mx-auto mb-3" />
-          <p className="text-surface-400">{t('no_orders')}</p>
+          <Package size={40} className="text-slate-400 dark:text-surface-600 mx-auto mb-3" />
+          <p className="text-slate-500 dark:text-surface-400">{t('no_orders')}</p>
         </div>
       ) : (
         <div className="space-y-3">
           {orders.map((order) => (
             <div key={order.id} className="card" id={`admin-order-${order.id}`}>
               <div className="flex items-center justify-between mb-3">
-                <span className="text-xs text-surface-500 font-mono">{order.id}</span>
-                <span className="text-xs text-surface-500">
+                <span className="text-xs text-slate-400 dark:text-surface-500 font-mono">{order.id}</span>
+                <span className="text-xs text-slate-400 dark:text-surface-500">
                   {new Date(order.created_at).toLocaleDateString()}
                 </span>
               </div>
@@ -65,18 +65,18 @@ export default function AdminOrders() {
               {/* Items */}
               <div className="space-y-1 mb-3">
                 {(order.items || []).map((item, i) => (
-                  <p key={i} className="text-sm text-surface-300">
+                  <p key={i} className="text-sm text-slate-700 dark:text-surface-300">
                     {item.name} × {item.qty} = ₹{item.price * item.qty}
                   </p>
                 ))}
               </div>
 
-              <div className="flex flex-col gap-2 mb-3 pt-3 border-t border-surface-700">
-                <div className="flex items-center gap-2 text-xs text-surface-300">
+              <div className="flex flex-col gap-2 mb-3 pt-3 border-t border-slate-200 dark:border-surface-700">
+                <div className="flex items-center gap-2 text-xs text-slate-700 dark:text-surface-300">
                   <User size={14} className="shrink-0 text-brand-400" />
                   <span className="font-semibold">{order.users?.name || 'Customer'}</span>
                 </div>
-                <div className="flex items-start gap-2 text-xs text-surface-400 leading-tight">
+                <div className="flex items-start gap-2 text-xs text-slate-500 dark:text-surface-400 leading-tight">
                   <MapPin size={14} className="shrink-0 mt-0.5" />
                   <span>{order.address || '—'}</span>
                 </div>
@@ -90,7 +90,7 @@ export default function AdminOrders() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-surface-700">
+              <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-surface-700">
                 <span className="font-bold text-brand-400 text-lg">₹{order.total_price}</span>
 
                 {/* Status Selector */}
@@ -101,7 +101,7 @@ export default function AdminOrders() {
                     className={`appearance-none px-3 py-1.5 pr-8 rounded-xl text-xs font-semibold border cursor-pointer bg-transparent ${statusColors[order.status] || statusColors.pending}`}
                   >
                     {statuses.map((s) => (
-                      <option key={s} value={s} className="bg-surface-800 text-white font-semibold">
+                      <option key={s} value={s} className="bg-white dark:bg-surface-800 text-slate-800 dark:text-white font-semibold">
                         {t(`status_${s}`)}
                       </option>
                     ))}

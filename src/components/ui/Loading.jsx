@@ -5,7 +5,7 @@ export function LoadingSpinner({ size = 'md', text }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 gap-3">
       <Loader2 size={sizes[size]} className="animate-spin text-brand-400" />
-      {text && <p className="text-surface-400 text-sm">{text}</p>}
+      {text && <p className="text-surface-500 dark:text-surface-400 text-sm">{text}</p>}
     </div>
   );
 }
@@ -25,12 +25,12 @@ export function SkeletonCard({ count = 1 }) {
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="card animate-pulse">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-xl bg-surface-700/50 shimmer" />
+            <div className="w-14 h-14 rounded-xl bg-surface-200 dark:bg-surface-700/50 shimmer" />
             <div className="flex-1 space-y-2">
-              <div className="h-4 bg-surface-700/50 rounded-lg w-3/4 shimmer" />
-              <div className="h-3 bg-surface-700/50 rounded-lg w-1/2 shimmer" />
+              <div className="h-4 bg-surface-200 dark:bg-surface-700/50 rounded-lg w-3/4 shimmer" />
+              <div className="h-3 bg-surface-200 dark:bg-surface-700/50 rounded-lg w-1/2 shimmer" />
             </div>
-            <div className="h-6 w-12 bg-surface-700/50 rounded-lg shimmer" />
+            <div className="h-6 w-12 bg-surface-200 dark:bg-surface-700/50 rounded-lg shimmer" />
           </div>
         </div>
       ))}
@@ -43,10 +43,10 @@ export function SkeletonProductGrid({ count = 6 }) {
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="card animate-pulse">
-          <div className="h-32 rounded-xl bg-surface-700/50 mb-3 shimmer" />
-          <div className="h-4 bg-surface-700/50 rounded-lg w-3/4 mb-2 shimmer" />
-          <div className="h-5 bg-surface-700/50 rounded-lg w-1/3 mb-3 shimmer" />
-          <div className="h-10 bg-surface-700/50 rounded-2xl shimmer" />
+          <div className="h-32 rounded-xl bg-surface-200 dark:bg-surface-700/50 mb-3 shimmer" />
+          <div className="h-4 bg-surface-200 dark:bg-surface-700/50 rounded-lg w-3/4 mb-2 shimmer" />
+          <div className="h-5 bg-surface-200 dark:bg-surface-700/50 rounded-lg w-1/3 mb-3 shimmer" />
+          <div className="h-10 bg-surface-200 dark:bg-surface-700/50 rounded-2xl shimmer" />
         </div>
       ))}
     </div>
@@ -58,9 +58,9 @@ export function SkeletonStats({ count = 4 }) {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="card animate-pulse">
-          <div className="w-12 h-12 rounded-xl bg-surface-700/50 mb-3 shimmer" />
-          <div className="h-3 bg-surface-700/50 rounded-lg w-2/3 mb-2 shimmer" />
-          <div className="h-6 bg-surface-700/50 rounded-lg w-1/3 shimmer" />
+          <div className="w-12 h-12 rounded-xl bg-surface-200 dark:bg-surface-700/50 mb-3 shimmer" />
+          <div className="h-3 bg-surface-200 dark:bg-surface-700/50 rounded-lg w-2/3 mb-2 shimmer" />
+          <div className="h-6 bg-surface-200 dark:bg-surface-700/50 rounded-lg w-1/3 shimmer" />
         </div>
       ))}
     </div>

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import ToastContainer from './components/ui/Toast';
@@ -35,37 +36,39 @@ export default function App() {
     <ErrorBoundary>
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <LanguageProvider>
-          <AuthProvider>
-            <CartProvider>
-              <OfflineIndicator />
-              <PushNotificationBanner />
-              <Routes>
-                {/* Public routes */}
-                <Route element={<Layout />}>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/products" element={<Products />} />
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/blood-tests" element={<BloodTests />} />
-                  <Route path="/prescriptions" element={<Prescriptions />} />
-                  <Route path="/orders" element={<Orders />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/referral" element={<Referral />} />
-                </Route>
+          <ThemeProvider>
+            <AuthProvider>
+              <CartProvider>
+                <OfflineIndicator />
+                <PushNotificationBanner />
+                <Routes>
+                  {/* Public routes */}
+                  <Route element={<Layout />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/products" element={<Products />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/blood-tests" element={<BloodTests />} />
+                    <Route path="/prescriptions" element={<Prescriptions />} />
+                    <Route path="/orders" element={<Orders />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/referral" element={<Referral />} />
+                  </Route>
 
-                {/* Admin routes */}
-                <Route path="/admin" element={<AdminLayout />}>
-                  <Route index element={<AdminDashboard />} />
-                  <Route path="products" element={<AdminProducts />} />
-                  <Route path="orders" element={<AdminOrders />} />
-                  <Route path="blood-tests" element={<AdminBloodTests />} />
-                  <Route path="prescriptions" element={<AdminPrescriptions />} />
-                  <Route path="settings" element={<AdminSettings />} />
-                </Route>
-              </Routes>
-              <ToastContainer />
-            </CartProvider>
-          </AuthProvider>
+                  {/* Admin routes */}
+                  <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="products" element={<AdminProducts />} />
+                    <Route path="orders" element={<AdminOrders />} />
+                    <Route path="blood-tests" element={<AdminBloodTests />} />
+                    <Route path="prescriptions" element={<AdminPrescriptions />} />
+                    <Route path="settings" element={<AdminSettings />} />
+                  </Route>
+                </Routes>
+                <ToastContainer />
+              </CartProvider>
+            </AuthProvider>
+          </ThemeProvider>
         </LanguageProvider>
       </BrowserRouter>
     </ErrorBoundary>

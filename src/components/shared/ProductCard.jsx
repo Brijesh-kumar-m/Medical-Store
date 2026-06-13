@@ -31,7 +31,7 @@ export default function ProductCard({ product }) {
             fallbackIcon={<Pill size={32} className="text-brand-500/40" />}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-surface-800 to-surface-700 flex items-center justify-center">
+          <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-surface-800 dark:to-surface-700 flex items-center justify-center">
             <Pill size={32} className="text-brand-500/40" />
           </div>
         )}

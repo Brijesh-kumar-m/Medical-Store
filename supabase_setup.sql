@@ -90,3 +90,16 @@ CREATE TABLE IF NOT EXISTS public.prescriptions (
 INSERT INTO public.admin_settings (id, value) 
 VALUES ('global', '{"delivery_charge": 50}')
 ON CONFLICT (id) DO NOTHING;
+
+-- 8. CREATE REFERRALS TABLE
+CREATE TABLE IF NOT EXISTS public.referrals (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  referrer_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+  invitee_mobile TEXT NOT NULL,
+  rewarded BOOLEAN DEFAULT false,
+  reward_amount NUMERIC DEFAULT 50,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Disable RLS for referrals to match other tables in setup
+ALTER TABLE IF EXISTS public.referrals DISABLE ROW LEVEL SECURITY;

@@ -78,7 +78,7 @@ export default function AdminProducts() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="section-title">{t('admin_products')}</h2>
-          <p className="text-surface-400 text-sm">{products.length} {lang === 'hi' ? 'प्रोडक्ट' : 'products'}</p>
+          <p className="text-slate-500 dark:text-surface-400 text-sm">{products.length} {lang === 'hi' ? 'प्रोडक्ट' : 'products'}</p>
         </div>
         <button onClick={openNew} className="btn-primary flex items-center gap-2" id="add-product-btn">
           <Plus size={18} /> {t('add_product')}
@@ -89,7 +89,7 @@ export default function AdminProducts() {
       <div className="space-y-3">
         {products.map((p) => (
           <div key={p.id} className="card flex items-center gap-4" id={`admin-product-${p.id}`}>
-            <div className="w-12 h-12 rounded-xl overflow-hidden bg-surface-700 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 dark:bg-surface-700 flex items-center justify-center shrink-0">
               {p.image ? (
                 <OptimizedImage
                   src={p.image}
@@ -103,14 +103,14 @@ export default function AdminProducts() {
             </div>
             <div className="flex-1 min-w-0">
               <h4 className="font-semibold text-sm truncate">{p.name}</h4>
-              <p className="text-xs text-surface-500">{t(p.category)} • {p.in_stock ? t('in_stock') : t('out_of_stock')}</p>
+              <p className="text-xs text-slate-500 dark:text-surface-500">{t(p.category)} • {p.in_stock ? t('in_stock') : t('out_of_stock')}</p>
             </div>
             <span className="text-brand-400 font-bold shrink-0">₹{p.price}</span>
             <div className="flex gap-1 shrink-0">
-              <button onClick={() => openEdit(p)} className="p-2 rounded-lg bg-surface-700 hover:bg-surface-600 transition-colors">
+              <button onClick={() => openEdit(p)} className="p-2 rounded-lg bg-slate-100 dark:bg-surface-700 hover:bg-slate-200 dark:hover:bg-surface-600 transition-colors">
                 <Edit3 size={14} className="text-blue-400" />
               </button>
-              <button onClick={() => handleDelete(p.id)} className="p-2 rounded-lg bg-surface-700 hover:bg-red-500/20 transition-colors">
+              <button onClick={() => handleDelete(p.id)} className="p-2 rounded-lg bg-slate-100 dark:bg-surface-700 hover:bg-red-500/20 transition-colors">
                 <Trash2 size={14} className="text-red-400" />
               </button>
             </div>
@@ -125,7 +125,7 @@ export default function AdminProducts() {
           <div className="modal">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-lg">{editing === 'new' ? t('add_product') : t('edit_product')}</h3>
-              <button onClick={() => setEditing(null)} className="p-2 rounded-lg hover:bg-surface-700">
+              <button onClick={() => setEditing(null)} className="p-2 rounded-lg text-slate-500 dark:text-surface-400 hover:bg-slate-100 dark:hover:bg-surface-700 transition-colors">
                 <X size={18} />
               </button>
             </div>
@@ -174,14 +174,14 @@ export default function AdminProducts() {
                         setForm({ ...form, image: url });
                       }
                     }
-                  }} className="w-full text-sm text-surface-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-surface-700 file:text-white hover:file:bg-surface-600" />
+                  }} className="w-full text-sm text-slate-500 dark:text-surface-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-slate-100 dark:file:bg-surface-700 file:text-slate-700 dark:file:text-white hover:file:bg-slate-200 dark:hover:file:bg-surface-600 transition-colors" />
                   {form.image && (
                     <div className="relative shrink-0">
-                      <img src={form.image} className="w-12 h-12 rounded-lg object-cover border border-surface-600" />
+                      <img src={form.image} className="w-12 h-12 rounded-lg object-cover border border-slate-300 dark:border-surface-600" />
                       <button
                         type="button"
                         onClick={() => setForm({ ...form, image: '' })}
-                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 shadow-md border-2 border-surface-800"
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 shadow-md border-2 border-white dark:border-surface-800"
                       >
                         <X size={10} />
                       </button>
@@ -200,7 +200,7 @@ export default function AdminProducts() {
                       className={`py-2.5 px-3 rounded-xl text-xs font-semibold transition-all duration-300 border ${
                         form.category === c
                           ? 'bg-brand-500 text-white border-brand-500 shadow-lg shadow-brand-500/30'
-                          : 'bg-surface-800/80 text-surface-400 border-surface-600 hover:border-brand-500/50 hover:text-white'
+                          : 'bg-slate-100 dark:bg-surface-800/80 text-slate-600 dark:text-surface-400 border-slate-200 dark:border-surface-600 hover:border-brand-500/50 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       {t(c)}

@@ -35,19 +35,19 @@ function StatusTimeline({ currentStatus, statuses, t }) {
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold transition-all ${
                 isDone
                   ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30'
-                  : 'bg-surface-700 text-surface-500 border border-surface-600'
-              } ${isCurrent ? 'ring-2 ring-brand-400/30 ring-offset-2 ring-offset-surface-900' : ''}`}>
+                  : 'bg-slate-100 dark:bg-surface-700 text-slate-400 dark:text-surface-500 border border-slate-200 dark:border-surface-600'
+              } ${isCurrent ? 'ring-2 ring-brand-400/30 ring-offset-2 ring-offset-slate-50 dark:ring-offset-surface-900' : ''}`}>
                 {isDone ? <CheckCircle size={14} /> : i + 1}
               </div>
               <span className={`text-[9px] mt-1 font-medium leading-tight text-center ${
-                isDone ? 'text-brand-400' : 'text-surface-500'
+                isDone ? 'text-brand-400' : 'text-slate-400 dark:text-surface-500'
               }`}>
                 {t(`status_${status}`)}
               </span>
             </div>
             {i < statuses.length - 1 && (
               <div className={`flex-1 h-0.5 mx-1 rounded transition-all ${
-                i < currentIdx ? 'bg-brand-500' : 'bg-surface-700'
+                i < currentIdx ? 'bg-brand-500' : 'bg-slate-200 dark:bg-surface-700'
               }`} />
             )}
           </div>
@@ -130,13 +130,13 @@ export default function Orders() {
       <p className="section-subtitle">{t('order_history')}</p>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 p-1 bg-surface-800 rounded-2xl">
+      <div className="flex gap-2 mb-6 p-1 bg-slate-100 dark:bg-surface-800 rounded-2xl transition-colors duration-300">
         <button
           onClick={() => setTab('orders')}
           className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
             tab === 'orders'
               ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30'
-              : 'text-surface-400 hover:text-white'
+              : 'text-slate-500 dark:text-surface-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <Package size={16} />
@@ -147,7 +147,7 @@ export default function Orders() {
           className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
             tab === 'tests'
               ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30'
-              : 'text-surface-400 hover:text-white'
+              : 'text-slate-500 dark:text-surface-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <Droplets size={16} />
@@ -160,8 +160,8 @@ export default function Orders() {
       ) : tab === 'orders' ? (
         orders.length === 0 ? (
           <div className="card text-center py-12">
-            <Package size={40} className="text-surface-600 mx-auto mb-3" />
-            <p className="text-surface-400">{t('no_orders')}</p>
+            <Package size={40} className="text-slate-400 dark:text-surface-600 mx-auto mb-3" />
+            <p className="text-slate-500 dark:text-surface-400">{t('no_orders')}</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -182,14 +182,14 @@ export default function Orders() {
                 {/* Items */}
                 <div className="space-y-1 mb-3">
                   {(order.items || []).map((item, i) => (
-                    <p key={i} className="text-sm text-surface-300">
+                    <p key={i} className="text-sm text-slate-700 dark:text-surface-300">
                       {item.name} × {item.qty} — ₹{item.price * item.qty}
                     </p>
                   ))}
                 </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-surface-700">
-                  <span className="text-xs text-surface-500">{new Date(order.created_at).toLocaleDateString()}</span>
+                <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-surface-700">
+                  <span className="text-xs text-slate-500 dark:text-surface-500">{new Date(order.created_at).toLocaleDateString()}</span>
                   <span className="font-bold text-brand-400">₹{order.total_price}</span>
                 </div>
 
@@ -211,8 +211,8 @@ export default function Orders() {
       ) : (
         bloodTests.length === 0 ? (
           <div className="card text-center py-12">
-            <Droplets size={40} className="text-surface-600 mx-auto mb-3" />
-            <p className="text-surface-400">{lang === 'hi' ? 'कोई टेस्ट नहीं' : 'No blood tests yet'}</p>
+            <Droplets size={40} className="text-slate-400 dark:text-surface-600 mx-auto mb-3" />
+            <p className="text-slate-500 dark:text-surface-400">{lang === 'hi' ? 'कोई टेस्ट नहीं' : 'No blood tests yet'}</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -230,7 +230,7 @@ export default function Orders() {
                   t={t}
                 />
 
-                <div className="text-xs text-surface-400 space-y-1">
+                <div className="text-xs text-slate-500 dark:text-surface-400 space-y-1">
                   <p>{t('date')}: {bt.date} | {t('time')}: {bt.time}</p>
                   <p>{t('address')}: {bt.address}</p>
                 </div>
@@ -247,8 +247,8 @@ export default function Orders() {
                   </button>
                 )}
 
-                <div className="mt-2 pt-2 border-t border-surface-700 flex justify-between items-center">
-                  <span className="text-xs text-surface-500">{new Date(bt.created_at).toLocaleDateString()}</span>
+                <div className="mt-2 pt-2 border-t border-slate-200 dark:border-surface-700 flex justify-between items-center">
+                  <span className="text-xs text-slate-500 dark:text-surface-500">{new Date(bt.created_at).toLocaleDateString()}</span>
                   <span className="text-brand-400 font-bold">₹{bt.price}</span>
                 </div>
               </div>

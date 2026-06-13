@@ -16,11 +16,11 @@ const firebaseService = {
     if (!snapshot.empty) {
       const userDoc = snapshot.docs[0];
       await updateDoc(doc(db, 'users', userDoc.id), { name });
-      return { id: userDoc.id, ...userDoc.data(), name };
+      return { id: userDoc.id, ...userDoc.data(), name, isNew: false };
     }
     const newUser = { name, mobile, role: 'user', created_at: new Date().toISOString() };
     const docRef = await addDoc(collection(db, 'users'), newUser);
-    return { id: docRef.id, ...newUser };
+    return { id: docRef.id, ...newUser, isNew: true };
   },
 
   async getUser(id) {

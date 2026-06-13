@@ -90,7 +90,7 @@ export default function AdminSettings() {
           <button
             onClick={() => switchLanguage('en')}
             className={`card text-center py-4 ${
-              lang === 'en' ? 'border-brand-500 bg-brand-500/10' : 'hover:border-surface-500'
+              lang === 'en' ? 'border-brand-500 bg-brand-500/10' : 'hover:border-brand-500/50'
             }`}
           >
             <p className="font-semibold">English</p>
@@ -99,7 +99,7 @@ export default function AdminSettings() {
           <button
             onClick={() => switchLanguage('hi')}
             className={`card text-center py-4 ${
-              lang === 'hi' ? 'border-brand-500 bg-brand-500/10' : 'hover:border-surface-500'
+              lang === 'hi' ? 'border-brand-500 bg-brand-500/10' : 'hover:border-brand-500/50'
             }`}
           >
             <p className="font-semibold">हिंदी</p>

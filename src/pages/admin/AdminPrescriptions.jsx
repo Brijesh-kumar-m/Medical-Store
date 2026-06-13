@@ -65,7 +65,7 @@ export default function AdminPrescriptions() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="section-title">{lang === 'hi' ? 'प्रिस्क्रिप्शन' : 'Prescriptions'}</h2>
-          <p className="text-surface-400 text-sm">{filtered.length} {lang === 'hi' ? 'प्रिस्क्रिप्शन' : 'prescriptions'}</p>
+          <p className="text-slate-500 dark:text-surface-400 text-sm">{filtered.length} {lang === 'hi' ? 'प्रिस्क्रिप्शन' : 'prescriptions'}</p>
         </div>
       </div>
 
@@ -78,7 +78,7 @@ export default function AdminPrescriptions() {
             className={`shrink-0 px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
               filter === f
                 ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30'
-                : 'bg-surface-800 text-surface-400 border border-surface-600'
+                : 'bg-slate-100 dark:bg-surface-800 text-slate-600 dark:text-surface-400 border border-slate-200 dark:border-surface-600 hover:border-brand-500/50 hover:bg-slate-200 dark:hover:bg-surface-700'
             }`}
           >
             {f === 'all' ? (lang === 'hi' ? 'सभी' : 'All') :
@@ -92,8 +92,8 @@ export default function AdminPrescriptions() {
       {loading ? <SkeletonCard count={3} /> :
        filtered.length === 0 ? (
         <div className="card text-center py-12">
-          <FileImage size={40} className="text-surface-600 mx-auto mb-3" />
-          <p className="text-surface-400">{lang === 'hi' ? 'कोई प्रिस्क्रिप्शन नहीं' : 'No prescriptions found'}</p>
+          <FileImage size={40} className="text-slate-400 dark:text-surface-600 mx-auto mb-3" />
+          <p className="text-slate-500 dark:text-surface-400">{lang === 'hi' ? 'कोई प्रिस्क्रिप्शन नहीं' : 'No prescriptions found'}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -102,7 +102,7 @@ export default function AdminPrescriptions() {
               <div className="flex items-start gap-3">
                 {/* Prescription Image Thumbnail */}
                 <a href={rx.image_url} target="_blank" rel="noopener noreferrer" className="shrink-0">
-                  <div className="w-20 h-20 rounded-xl overflow-hidden bg-surface-800 border border-surface-600 hover:border-brand-500/50 transition-all cursor-pointer group">
+                  <div className="w-20 h-20 rounded-xl overflow-hidden bg-slate-100 dark:bg-surface-800 border border-slate-200 dark:border-surface-600 hover:border-brand-500/50 transition-all cursor-pointer group">
                     <img src={rx.image_url} alt="Prescription" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                   </div>
                 </a>
@@ -111,32 +111,32 @@ export default function AdminPrescriptions() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     {getStatusBadge(rx.status || 'pending')}
-                    <span className="text-surface-500 text-xs">
+                    <span className="text-slate-500 dark:text-surface-500 text-xs">
                       {new Date(rx.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </span>
                   </div>
 
                   {rx.users && (
-                    <div className="flex items-center gap-3 text-xs text-surface-400 mt-1">
+                    <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-surface-400 mt-1">
                       <span className="flex items-center gap-1"><User size={12} /> {rx.users.name}</span>
                       <span className="flex items-center gap-1"><Phone size={12} /> {rx.users.mobile}</span>
                     </div>
                   )}
 
                   {rx.notes && (
-                    <p className="text-surface-400 text-xs mt-1 line-clamp-2">📝 {rx.notes}</p>
+                    <p className="text-slate-500 dark:text-surface-400 text-xs mt-1 line-clamp-2">📝 {rx.notes}</p>
                   )}
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-surface-700/50">
+              <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-surface-700/50">
                 <div className="flex gap-2">
                   <a
                     href={rx.image_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-surface-800 text-surface-300 hover:bg-surface-700 text-xs font-semibold transition-all"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-100 dark:bg-surface-800 text-slate-700 dark:text-surface-300 hover:bg-slate-200 dark:hover:bg-surface-700 text-xs font-semibold transition-all"
                   >
                     <Eye size={14} /> {lang === 'hi' ? 'देखें' : 'View'}
                   </a>

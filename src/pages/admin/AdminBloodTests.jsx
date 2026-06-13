@@ -103,11 +103,11 @@ export default function AdminBloodTests() {
       <h2 className="section-title">{t('admin_blood_tests')}</h2>
       
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 p-1 bg-surface-800 rounded-2xl">
+      <div className="flex gap-2 mb-6 p-1 bg-slate-100 dark:bg-surface-800 rounded-2xl transition-colors duration-300">
         <button
           onClick={() => setActiveTab('bookings')}
           className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-            activeTab === 'bookings' ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30' : 'text-surface-400 hover:text-white'
+            activeTab === 'bookings' ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30' : 'text-slate-500 dark:text-surface-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           {lang === 'hi' ? 'बुकिंग्स' : 'Bookings'}
@@ -115,7 +115,7 @@ export default function AdminBloodTests() {
         <button
           onClick={() => setActiveTab('tests')}
           className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-            activeTab === 'tests' ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30' : 'text-surface-400 hover:text-white'
+            activeTab === 'tests' ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30' : 'text-slate-500 dark:text-surface-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           {lang === 'hi' ? 'टेस्ट मैनेज करें' : 'Manage Tests'}
@@ -127,8 +127,8 @@ export default function AdminBloodTests() {
         loadingBookings ? <SkeletonCard count={3} /> :
         bookings.length === 0 ? (
           <div className="card text-center py-12">
-            <Droplets size={40} className="text-surface-600 mx-auto mb-3" />
-            <p className="text-surface-400">{lang === 'hi' ? 'कोई बुकिंग नहीं' : 'No bookings yet'}</p>
+            <Droplets size={40} className="text-slate-400 dark:text-surface-600 mx-auto mb-3" />
+            <p className="text-slate-500 dark:text-surface-400">{lang === 'hi' ? 'कोई बुकिंग नहीं' : 'No bookings yet'}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -136,23 +136,23 @@ export default function AdminBloodTests() {
               <div key={bt.id} className="card">
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-semibold text-sm">{bt.test_type}</h4>
-                  <span className="text-xs text-surface-500 font-mono">{bt.id}</span>
+                  <span className="text-xs text-slate-400 dark:text-surface-500 font-mono">{bt.id}</span>
                 </div>
-                <div className="text-xs text-surface-400 space-y-1.5 mb-3">
-                  <p className="flex items-center gap-1.5 font-medium text-surface-200">
+                <div className="text-xs text-slate-500 dark:text-surface-400 space-y-1.5 mb-3">
+                  <p className="flex items-center gap-1.5 font-medium text-slate-800 dark:text-surface-200">
                     <User size={14} className="text-brand-400 shrink-0" /> {bt.patient_name}
                   </p>
-                  <p className="flex items-center gap-1.5 text-surface-400">
-                    <Calendar size={14} className="shrink-0" /> {bt.date} <span className="text-surface-600">|</span> ⏰ {bt.time}
+                  <p className="flex items-center gap-1.5 text-slate-500 dark:text-surface-400">
+                    <Calendar size={14} className="shrink-0" /> {bt.date} <span className="text-slate-300 dark:text-surface-600">|</span> ⏰ {bt.time}
                   </p>
-                  <p className="flex items-start gap-1.5 text-surface-400">
+                  <p className="flex items-start gap-1.5 text-slate-500 dark:text-surface-400">
                     <MapPin size={14} className="shrink-0 mt-0.5" /> <span>{bt.address}</span>
                   </p>
                   <p className="flex items-center gap-1.5 font-semibold text-brand-400 mt-1">
                     <IndianRupee size={14} className="shrink-0" /> {bt.price}
                   </p>
                   {bt.users?.mobile && (
-                    <p className="flex items-center gap-1.5 mt-2 pt-2 border-t border-surface-700/50">
+                    <p className="flex items-center gap-1.5 mt-2 pt-2 border-t border-slate-200 dark:border-surface-700/50">
                       <Phone size={14} className="text-green-500 shrink-0" />
                       <a href={`https://wa.me/91${bt.users.mobile}`} target="_blank" rel="noreferrer" className="text-green-500 hover:text-green-400 hover:underline font-bold">
                         WhatsApp Contact (+91 {bt.users.mobile})
@@ -160,14 +160,14 @@ export default function AdminBloodTests() {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-surface-700 gap-2">
+                <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-surface-700 gap-2">
                   <div className="relative">
                     <select
                       value={bt.status}
                       onChange={(e) => handleStatusChange(bt.id, e.target.value)}
                       className={`appearance-none px-3 py-1.5 pr-8 rounded-xl text-xs font-semibold border cursor-pointer bg-transparent ${statusColors[bt.status] || statusColors.requested}`}
                     >
-                      {statuses.map((s) => <option key={s} value={s} className="bg-surface-800 text-white font-semibold">{t(`status_${s}`)}</option>)}
+                      {statuses.map((s) => <option key={s} value={s} className="bg-white dark:bg-surface-800 text-slate-800 dark:text-white font-semibold">{t(`status_${s}`)}</option>)}
                     </select>
                     <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
@@ -203,7 +203,7 @@ export default function AdminBloodTests() {
             <div className="space-y-3">
               {testTypes.map((test) => (
                 <div key={test.id} className="card flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-surface-700 flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-surface-700 flex items-center justify-center shrink-0">
                     <Droplets size={20} className="text-brand-400" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -212,10 +212,10 @@ export default function AdminBloodTests() {
                   </div>
                   <span className="text-brand-400 font-bold shrink-0">₹{test.price}</span>
                   <div className="flex gap-1 shrink-0">
-                    <button onClick={() => { setEditingTest(test); setTestForm({...test}); }} className="p-2 rounded-lg bg-surface-700 hover:bg-surface-600">
+                    <button onClick={() => { setEditingTest(test); setTestForm({...test}); }} className="p-2 rounded-lg bg-slate-100 dark:bg-surface-700 hover:bg-slate-200 dark:hover:bg-surface-600 text-slate-800 dark:text-white transition-colors">
                       <Edit3 size={14} className="text-blue-400" />
                     </button>
-                    <button onClick={() => handleDeleteTest(test.id)} className="p-2 rounded-lg bg-surface-700 hover:bg-red-500/20">
+                    <button onClick={() => handleDeleteTest(test.id)} className="p-2 rounded-lg bg-slate-100 dark:bg-surface-700 hover:bg-red-500/20 text-slate-800 dark:text-white transition-colors">
                       <Trash2 size={14} className="text-red-400" />
                     </button>
                   </div>
@@ -231,7 +231,7 @@ export default function AdminBloodTests() {
               <div className="modal">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-bold text-lg">{editingTest === 'new' ? 'Add Test' : 'Edit Test'}</h3>
-                  <button onClick={() => setEditingTest(null)} className="p-2 rounded-lg hover:bg-surface-700"><X size={18}/></button>
+                  <button onClick={() => setEditingTest(null)} className="p-2 rounded-lg text-slate-500 dark:text-surface-400 hover:bg-slate-100 dark:hover:bg-surface-700 transition-colors"><X size={18}/></button>
                 </div>
                 <div className="space-y-4">
                   <div>

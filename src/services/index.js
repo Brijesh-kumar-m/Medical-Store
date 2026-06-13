@@ -187,6 +187,11 @@ export async function createReferral(referrerId, inviteeMobile) {
   return svc.createReferral ? svc.createReferral(referrerId, inviteeMobile) : null;
 }
 
+export async function applyReferralCode(code, inviteeMobile) {
+  const svc = await getService();
+  return svc.applyReferralCode ? svc.applyReferralCode(code, inviteeMobile) : { success: false, error: 'Not supported' };
+}
+
 // Push Notifications
 export async function savePushToken(userId, token) {
   const svc = await getService();
