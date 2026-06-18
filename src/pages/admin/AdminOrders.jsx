@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { getOrders, updateOrderStatus } from '../../services/index.js';
+import { getOrders, updateOrderStatus, createNotification } from '../../services/index.js';
 import { SkeletonCard } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
 import { Package, ChevronDown, Phone, MapPin, User } from 'lucide-react';
@@ -25,6 +25,21 @@ export default function AdminOrders() {
   async function handleStatusChange(orderId, newStatus) {
     try {
       await updateOrderStatus(orderId, newStatus);
+      
+      const order = orders.find(o => o.id === orderId);
+      if (order && order.user_id) {
+        const shortId = String(orderId).slice(0, 8).toUpperCase();
+        await createNotification({
+          user_id: order.user_id,
+          title: lang === 'hi' ? `💊 ऑर्डर #${shortId} अपडेट` : `💊 Order #${shortId} Updated`,
+          body: lang === 'hi'
+            ? `आपके ऑर्डर की स्थिति अब है: ${t(`status_${newStatus}`)}`
+            : `Your order status is now: ${newStatus.toUpperCase()}`,
+          type: 'order',
+          metadata: { order_id: orderId, status: newStatus }
+        });
+      }
+
       showToast(lang === 'hi' ? 'स्थिति अपडेट हो गई' : 'Status updated');
       load();
     } catch (err) {

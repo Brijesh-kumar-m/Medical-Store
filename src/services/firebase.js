@@ -171,6 +171,47 @@ const firebaseService = {
       revenue: orders.reduce((sum, o) => sum + (o.total_price || 0), 0),
     };
   },
+
+  async savePushToken(userId, token) {
+    await updateDoc(doc(db, 'users', userId), { push_token: token });
+    return true;
+  },
+
+  async getNotifications(userId) {
+    const q1 = query(collection(db, 'notifications'), where('user_id', '==', userId), orderBy('created_at', 'desc'));
+    const q2 = query(collection(db, 'notifications'), where('user_id', '==', null), orderBy('created_at', 'desc'));
+    
+    const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+    const notifs = [
+      ...snap1.docs.map(d => ({ id: d.id, ...d.data() })),
+      ...snap2.docs.map(d => ({ id: d.id, ...d.data() }))
+    ];
+    return notifs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  },
+
+  async markNotificationRead(id) {
+    await updateDoc(doc(db, 'notifications', id), { read: true });
+    return { id, read: true };
+  },
+
+  async clearNotifications(userId) {
+    const q = query(collection(db, 'notifications'), where('user_id', '==', userId));
+    const snap = await getDocs(q);
+    const promises = snap.docs.map(d => deleteDoc(doc(db, 'notifications', d.id)));
+    await Promise.all(promises);
+    return true;
+  },
+
+  async createNotification(data) {
+    const notif = {
+      ...data,
+      user_id: data.user_id || null,
+      read: false,
+      created_at: new Date().toISOString()
+    };
+    const docRef = await addDoc(collection(db, 'notifications'), notif);
+    return { id: docRef.id, ...notif };
+  },
 };
 
 export default firebaseService;

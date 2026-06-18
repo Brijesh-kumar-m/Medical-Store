@@ -197,3 +197,23 @@ export async function savePushToken(userId, token) {
   const svc = await getService();
   return svc.savePushToken ? svc.savePushToken(userId, token) : null;
 }
+
+export async function getNotifications(userId) {
+  const svc = await getService();
+  return svc.getNotifications ? svc.getNotifications(userId) : [];
+}
+
+export async function markNotificationRead(id) {
+  const svc = await getService();
+  return svc.markNotificationRead ? svc.markNotificationRead(id) : null;
+}
+
+export async function clearNotifications(userId) {
+  const svc = await getService();
+  return svc.clearNotifications ? svc.clearNotifications(userId) : false;
+}
+
+export async function createNotification(data) {
+  const svc = await getService();
+  return svc.createNotification ? svc.createNotification(data) : null;
+}

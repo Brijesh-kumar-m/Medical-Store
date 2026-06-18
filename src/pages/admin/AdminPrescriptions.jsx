@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { getPrescriptions, updatePrescriptionStatus } from '../../services/index.js';
+import { getPrescriptions, updatePrescriptionStatus, createNotification } from '../../services/index.js';
 import { SkeletonCard } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
 import { FileImage, Check, X, Clock, Phone, User, ChevronDown, Eye, MessageCircle } from 'lucide-react';
@@ -28,6 +28,21 @@ export default function AdminPrescriptions() {
   async function handleUpdateStatus(id, newStatus) {
     try {
       await updatePrescriptionStatus(id, newStatus);
+      
+      const rx = prescriptions.find(p => p.id === id);
+      if (rx && rx.user_id) {
+        const shortId = String(id).slice(0, 8).toUpperCase();
+        await createNotification({
+          user_id: rx.user_id,
+          title: lang === 'hi' ? `📋 प्रिस्क्रिप्शन अपडेट` : `📋 Prescription Update`,
+          body: lang === 'hi'
+            ? `आपके प्रिस्क्रिप्शन #${shortId} की स्थिति अब है: ${newStatus.toUpperCase()}`
+            : `Your prescription #${shortId} status is now: ${newStatus.toUpperCase()}`,
+          type: 'prescription',
+          metadata: { prescription_id: id, status: newStatus }
+        });
+      }
+
       showToast(lang === 'hi' ? 'स्थिति अपडेट हो गई' : 'Status updated', 'success');
       loadPrescriptions(); // Refresh the list
     } catch (err) {

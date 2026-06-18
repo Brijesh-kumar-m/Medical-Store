@@ -1,13 +1,18 @@
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
-import { Globe, LogOut, LogIn, Sun, Moon } from 'lucide-react';
+import { useNotifications } from '../../contexts/NotificationContext';
+import NotificationCenter from '../shared/NotificationCenter';
+import { Globe, LogOut, LogIn, Sun, Moon, Bell } from 'lucide-react';
 
 export default function Header() {
   const { t, lang, switchLanguage } = useLanguage();
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { unreadCount } = useNotifications();
+  const [centerOpen, setCenterOpen] = useState(false);
   const location = useLocation();
 
   // Simplified header for admin
@@ -52,6 +57,23 @@ export default function Header() {
             <span className="text-xs font-bold text-slate-800 dark:text-white tracking-wide">{lang === 'en' ? 'हिं' : 'EN'}</span>
           </button>
 
+          {/* User Notification Bell */}
+          {user && user.id !== 'guest' && (
+            <button
+              onClick={() => setCenterOpen(true)}
+              className="relative p-2.5 rounded-xl bg-slate-100/80 dark:bg-surface-800/60 border border-slate-200/80 dark:border-surface-600/50 hover:bg-slate-200/80 dark:hover:bg-surface-800 hover:border-brand-500/40 transition-all text-slate-500 dark:text-surface-400 hover:text-slate-905 shadow-inner"
+              title="Notifications"
+              id="customer-notification-bell"
+            >
+              <Bell size={18} strokeWidth={2.5} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-red-500 to-rose-600 rounded-full text-[9px] font-black text-white flex items-center justify-center shadow-lg shadow-red-500/35">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
+          )}
+
           {/* Auth button */}
           {user && user.id !== 'guest' ? (
             <button
@@ -73,6 +95,7 @@ export default function Header() {
           )}
         </div>
       </div>
+      <NotificationCenter isOpen={centerOpen} onClose={() => setCenterOpen(false)} />
     </header>
   );
 }

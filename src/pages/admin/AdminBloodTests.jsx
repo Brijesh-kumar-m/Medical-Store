@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { 
   getBloodTestBookings, updateBloodTestStatus, uploadFile,
-  getBloodTestTypes, addBloodTestType, updateBloodTestType, deleteBloodTestType 
+  getBloodTestTypes, addBloodTestType, updateBloodTestType, deleteBloodTestType,
+  createNotification
 } from '../../services/index.js';
 import { SkeletonCard } from '../../components/ui/Loading';
 import { showToast } from '../../components/ui/Toast';
@@ -49,6 +50,20 @@ export default function AdminBloodTests() {
   async function handleStatusChange(id, status) {
     try {
       await updateBloodTestStatus(id, status);
+      
+      const booking = bookings.find(b => b.id === id);
+      if (booking && booking.user_id) {
+        await createNotification({
+          user_id: booking.user_id,
+          title: lang === 'hi' ? `🩸 ब्लड टेस्ट बुकिंग अपडेट` : `🩸 Blood Test Booking Update`,
+          body: lang === 'hi'
+            ? `आपके टेस्ट "${booking.test_type}" की स्थिति अब है: ${t(`status_${status}`)}`
+            : `Your booking for "${booking.test_type}" is now: ${status.toUpperCase()}`,
+          type: 'blood_test',
+          metadata: { booking_id: id, status }
+        });
+      }
+
       showToast(lang === 'hi' ? 'स्थिति अपडेट हो गई' : 'Status updated');
       loadBookings();
     } catch (err) { showToast('Error updating status', 'error'); }
@@ -61,6 +76,20 @@ export default function AdminBloodTests() {
     try {
       const url = await uploadFile(file, 'reports');
       await updateBloodTestStatus(bookingId, 'report_ready', url);
+      
+      const booking = bookings.find(b => b.id === bookingId);
+      if (booking && booking.user_id) {
+        await createNotification({
+          user_id: booking.user_id,
+          title: lang === 'hi' ? `🩸 टेस्ट रिपोर्ट तैयार है` : `🩸 Test Report Ready`,
+          body: lang === 'hi'
+            ? `आपके टेस्ट "${booking.test_type}" की रिपोर्ट अब डाउनलोड के लिए उपलब्ध है।`
+            : `Your report for "${booking.test_type}" is now available for download.`,
+          type: 'blood_test',
+          metadata: { booking_id: bookingId, status: 'report_ready', report_url: url }
+        });
+      }
+
       showToast(lang === 'hi' ? 'रिपोर्ट अपलोड हो गई' : 'Report uploaded');
       loadBookings();
     } catch (err) { showToast('Upload failed', 'error'); } 

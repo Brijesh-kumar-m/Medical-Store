@@ -315,6 +315,44 @@ const supabaseService = {
     if (error) throw error;
     return true;
   },
+
+  // Notifications
+  async getNotifications(userId) {
+    const { data } = await supabase
+      .from('notifications')
+      .select('*')
+      .or(`user_id.eq.${userId},user_id.is.null`)
+      .order('created_at', { ascending: false });
+    return data || [];
+  },
+
+  async markNotificationRead(id) {
+    const { data } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', id)
+      .select()
+      .single();
+    return data;
+  },
+
+  async clearNotifications(userId) {
+    await supabase
+      .from('notifications')
+      .delete()
+      .eq('user_id', userId);
+    return true;
+  },
+
+  async createNotification(notificationData) {
+    const { data, error } = await supabase
+      .from('notifications')
+      .insert(notificationData)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  },
 };
 
 export { supabase };

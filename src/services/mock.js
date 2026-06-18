@@ -86,6 +86,7 @@ let bloodTestsAdmin = (() => {
   return updated;
 })();
 let settings = JSON.parse(localStorage.getItem('o2_mock_settings') || '{"delivery_charge": 50}');
+let notifications = JSON.parse(localStorage.getItem('o2_mock_notifications') || '[]');
 
 function persist() {
   localStorage.setItem('o2_mock_users', JSON.stringify(users));
@@ -95,6 +96,7 @@ function persist() {
   localStorage.setItem('o2_mock_products', JSON.stringify(products));
   localStorage.setItem('o2_mock_blood_test_types', JSON.stringify(bloodTestsAdmin));
   localStorage.setItem('o2_mock_settings', JSON.stringify(settings));
+  localStorage.setItem('o2_mock_notifications', JSON.stringify(notifications));
 }
 
 const mockService = {
@@ -385,6 +387,53 @@ const mockService = {
     stats.total = stats.referrals.length;
     localStorage.setItem(refKey, JSON.stringify(stats));
     return { success: true, referral: newRef };
+  },
+
+  // ======== NOTIFICATIONS ========
+  async getNotifications(userId) {
+    await delay(200);
+    return notifications.filter(n => n.user_id === userId || !n.user_id).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  },
+
+  async markNotificationRead(id) {
+    await delay(100);
+    const idx = notifications.findIndex(n => n.id === id);
+    if (idx >= 0) {
+      notifications[idx].read = true;
+      persist();
+      return notifications[idx];
+    }
+    return null;
+  },
+
+  async clearNotifications(userId) {
+    await delay(200);
+    // Keep other users' notifications, clear current user's
+    notifications = notifications.filter(n => n.user_id !== userId);
+    persist();
+    return true;
+  },
+
+  async createNotification(data) {
+    await delay(200);
+    const notif = {
+      id: 'notif_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+      user_id: data.user_id || null,
+      title: data.title,
+      body: data.body,
+      type: data.type || 'alert',
+      metadata: data.metadata || {},
+      read: false,
+      created_at: new Date().toISOString()
+    };
+    notifications.push(notif);
+    persist();
+
+    // Trigger online real-time UI notification
+    const event = new CustomEvent('mock-notification-received', { detail: notif });
+    window.dispatchEvent(event);
+
+    return notif;
   },
 };
 

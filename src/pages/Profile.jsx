@@ -1,14 +1,71 @@
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { useNotifications } from '../contexts/NotificationContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Phone, Package, Droplets, FileImage, LogOut, Shield, ArrowRight, Gift, Sun, Moon } from 'lucide-react';
+import { showToast } from '../components/ui/Toast';
+import { User, Phone, Package, Droplets, FileImage, LogOut, Shield, ArrowRight, Gift, Sun, Moon, Bell, Volume2 } from 'lucide-react';
 
 export default function Profile() {
   const { t, lang } = useLanguage();
   const { user, isAdmin, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { soundEnabled, setSoundEnabled } = useNotifications();
   const navigate = useNavigate();
+
+  const [permission, setPermission] = useState('Notification' in window ? Notification.permission : 'unsupported');
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      setPermission(Notification.permission);
+    }
+  }, []);
+
+  async function requestNotificationPerm() {
+    if (!('Notification' in window)) return;
+    try {
+      const result = await Notification.requestPermission();
+      setPermission(result);
+      if (result === 'granted') {
+        showToast(lang === 'hi' ? 'पुश नोटिफिकेशन सक्रिय!' : 'Push notifications enabled!', 'success');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function simulateClosedAppPush() {
+    if (permission !== 'granted') {
+      showToast(lang === 'hi' ? 'पहले नोटिफिकेशन सक्षम करें' : 'Please enable notifications first', 'error');
+      return;
+    }
+
+    showToast(
+      lang === 'hi' 
+        ? 'सिमुलेशन 3 सेकंड में शुरू होगा। कृपया होम स्क्रीन पर जाएं या ऐप बंद करें।' 
+        : 'Starting simulation in 3s. Minimize/hide the app now!', 
+      'success'
+    );
+
+    setTimeout(async () => {
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        reg.showNotification('🏥 O2Clinic (Closed-App Sim)', {
+          body: lang === 'hi'
+            ? 'यह एक बंद ऐप पुश नोटिफिकेशन सिमुलेशन है!'
+            : 'This is a simulated closed-app push notification!',
+          icon: '/favicon.svg',
+          badge: '/favicon.svg',
+          vibrate: [200, 100, 200],
+          requireInteraction: true,
+          data: { url: '/orders' }
+        });
+      } catch (err) {
+        console.error('SW simulation failed:', err);
+      }
+    }, 3000);
+  }
 
   if (!user || user.id === 'guest') {
     return (
@@ -105,6 +162,79 @@ export default function Profile() {
         </div>
       </div>
 
+      {/* Notifications Preferences Card */}
+      <div className="card space-y-4 mb-8">
+        <h3 className="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2 border-b border-slate-200/40 dark:border-surface-700/40 pb-3">
+          <Bell size={16} className="text-brand-400" />
+          {lang === 'hi' ? 'नोटिफिकेशन सेटिंग्स' : 'Notification Settings'}
+        </h3>
+
+        <div className="space-y-4 text-xs font-semibold text-slate-700 dark:text-surface-300">
+          {/* Permission status */}
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-900 dark:text-white">{lang === 'hi' ? 'पुश नोटिफिकेशन' : 'Push Notifications'}</p>
+              <p className="text-[10px] text-slate-400 dark:text-surface-500 font-medium mt-0.5">
+                {lang === 'hi' ? 'आदेश स्थिति और महत्वपूर्ण घोषणाएं' : 'Order status and important updates'}
+              </p>
+            </div>
+            
+            {permission === 'granted' ? (
+              <span className="badge-success lowercase">{lang === 'hi' ? 'सक्षम' : 'enabled'}</span>
+            ) : permission === 'denied' ? (
+              <span className="badge-danger lowercase">{lang === 'hi' ? 'अस्वीकृत' : 'blocked'}</span>
+            ) : permission === 'unsupported' ? (
+              <span className="badge-danger lowercase">{lang === 'hi' ? 'असमर्थित' : 'not supported'}</span>
+            ) : (
+              <button
+                onClick={requestNotificationPerm}
+                className="px-3 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold transition-all shadow-sm"
+              >
+                {lang === 'hi' ? 'सक्रिय करें' : 'Enable'}
+              </button>
+            )}
+          </div>
+
+          {/* Sound settings */}
+          <div className="flex items-center justify-between border-t border-slate-200/30 dark:border-surface-700/30 pt-3">
+            <div>
+              <p className="text-slate-900 dark:text-white">{lang === 'hi' ? 'नोटिफिकेशन साउंड' : 'In-App Sound'}</p>
+              <p className="text-[10px] text-slate-400 dark:text-surface-500 font-medium mt-0.5">
+                {lang === 'hi' ? 'नया अलर्ट आने पर ऑडियो चाइम' : 'Play a chime when alerts arrive online'}
+              </p>
+            </div>
+            <button
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className={`p-2 rounded-xl border transition-all ${
+                soundEnabled 
+                  ? 'bg-brand-500/10 text-brand-400 border-brand-500/20' 
+                  : 'bg-slate-100 dark:bg-surface-800 text-slate-400 border-slate-200 dark:border-surface-700'
+              }`}
+            >
+              <Volume2 size={16} />
+            </button>
+          </div>
+
+          {/* Closed App Push Simulator */}
+          {permission === 'granted' && (
+            <div className="border-t border-slate-200/30 dark:border-surface-700/30 pt-4 flex flex-col gap-2">
+              <p className="text-slate-900 dark:text-white">{lang === 'hi' ? 'पुश सिमुलेटर (परीक्षण)' : 'Push Simulator (Test)'}</p>
+              <p className="text-[10px] text-slate-400 dark:text-surface-500 font-medium leading-relaxed">
+                {lang === 'hi' 
+                  ? 'ऐप को बंद करने या पृष्ठभूमि में ले जाने पर पुश नोटिफिकेशन का परीक्षण करें।'
+                  : 'Test system notifications even when the app is minimized or the screen is locked.'}
+              </p>
+              <button
+                onClick={simulateClosedAppPush}
+                className="btn-secondary w-full py-3 flex items-center justify-center gap-2 text-xs font-bold mt-1 shadow-sm"
+              >
+                📲 {lang === 'hi' ? 'बंद ऐप नोटिफिकेशन का परीक्षण करें' : 'Simulate Closed-App Push'}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Logout */}
       <button
         onClick={() => { logout(); navigate('/login'); }}
@@ -112,7 +242,7 @@ export default function Profile() {
         id="profile-logout"
       >
         <LogOut size={18} />
-        {t('logout')}
+        {lang === 'hi' ? 'लॉगआउट' : 'Logout'}
       </button>
     </div>
   );
